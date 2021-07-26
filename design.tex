@@ -1,0 +1,144 @@
+\section{Design}
+
+We aim to evade advanced phishing websites from the user end in real time when users visit them.
+To this end, we design, implement, and evaluate~\spartacus, a framework that automatically evade malicious websites that implement fingerprint cloaking.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figs/arch.pdf}
+\caption{\spartacus architecture.}
+\label{fig:sp_arch}
+% \vspace{-10pt}
+\end{figure*}
+
+\subsection{Overview}
+\autoref{fig:sp_arch} demonstrates the architecture of the \spartacus system.
+The whole system consists of two parts, \emph{front end} and \emph{back end}. 
+The front end is responsible for filtering whitelisted or blacklisted URLs and mutating profiles in the HTTP request such as user agent. 
+In the back end, we maintain several databases to provide support to the front end, including black and whitelist database, which is used to process known URLs, fingerprinting knowledge base, which stores the successful mutation, the anti-phishing bot profile database, which contains the profiles of anti-phishing systems such as google bot, phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
+
+When a user tries to visit a URL, first the URL goes to black and whitelist. 
+If the existing record is found, the browser will either block the access or keep user's original profile when requesting the server. 
+Otherwise, the front end will query the fingerprinting knowledgebase to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the “spartacus” profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness. If yes, the browser will show a warning sign to the user, or the web page content will be shown to the user. The knowledge base will be updated accordingly under both situations. 
+
+\subsection{Collection and Maintenance of Back End Databases}
+
+\noindent
+\textbf{Black- and whitelist database.}
+Blacklist based anti-phishing systems such as Google Safe Browsing and Microsoft SmartScreen have been examining and collecting phishing URLs to warn users before they visit the websites.
+We collect known phishing URLs from common blacklists so that \spartacus can leverage the achievements from the anti-phishing systems to facilitate the web request process when dealing with known phishing websites.
+Similarly, we leverage a whitelist to avoid any impacts brought by \spartacus so that the users can visit legitimate websites with their own profiles.
+
+\noindent
+\textbf{Fingerprinting Knowledgebase.}
+The fingerprinting knowledgebase is shared among users who leverage \spartacus and stores profiles with which users cannot see malicious content when requesting the server.
+After the maliciousness classification, if phishing content is not found in the responded source, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the knowledgebase.
+When other users try to visit the same URL, \spartacus will use the corresponding profile recorded in the database to guarantee that users do not receive malicious content.
+
+\noindent
+\textbf{Anti-phishing Bot Profile Database.}
+The profiles of anti-phishing system crawlers are keeping updating all the time.
+Accordingly, phishers refresh their blacklist to precisely evade the access from the anti-phishing bots.
+Therefore, we crawl the up-to-date profiles of anti-phishing systems into the database and hence \spartacus can leverage them to visit suspicious websites and receive benign web page content.
+
+\noindent
+\textbf{Phishing Attribute Database.}
+After sending request with mutated profile and receiving respond from the server, \spartacus needs to classify whether maliciousness exists in the web page content.
+It implements the state-of-the-art phishing detections such as content-based and visual-similarity-based methodologies to extract phishing attributes based on the responded web page content such as screenshots and HTML source code.
+\spartacus compares such features with those from websites of most phishing-targeted organizations, which stores in the Phishing Attribute Datatbase.
+
+
+\subsection{Decision Makers on A URL Visit}
+
+When a user attempts to visit a URL, the URL will go through several decision makers to assure a safe browsing.
+The decision makers consist of Blacklist Filter, Whitelist Filter, Knowledgebase Query, and Maliciousness Classification.
+We will elaborate them in order of the system flow.
+
+\noindent
+\textbf{Blacklist Filter.}
+With the contribution of the anti-phishing ecosystem, \spartacus can filter known phishing URLs through the query to the Malicious URL BlackList Database.
+Any match in the blacklist database will result in a block access to the URL without further action.
+
+\noindent
+\textbf{Whitelist Filter.}
+Similar to the blacklist filter, the whitelist filter in \spartacus helps filter the whitelisted URLs so that the user can receive the web page content with best out-looking that the organization configures to fit in the visit from different browsers or devices.
+
+\noindent
+\textbf{Knowledgebase Query.}
+When the URL does not fall into either Blacklist or Whitelist filter, \spartacus will examine whether such URL has been visited once by either the user or other users by querying the Fingerprinting Knowledgebase.
+If a record is found in the knowledgebase, \spartacus will mutate the web request profile according to the record to make sure that such web request profile will return a benign web page content;
+otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which randomly selects one profile from Anti-phishing Bot Profile Database to submit the web request and lowers the impact to possible web page layout to the lowest.
+
+\noindent
+\textbf{Maliciousness Classification.}
+After submitting the web request to the server, \spartacus along with the browser will receive a response from the server.
+There are different situations of the response as follows:
+
+(1) The server responds either a benign page or an error page with status code of 4XX/5XX, or, it redirects the visit to a benign website, which is typically the website it impersonates;
+
+(2) The server returns malicious web page content.
+
+\noindent
+The former result is because (a) the server is malicious with evasion techniques and determines the visit from \spartacus as anti-phishing bot visit, or (b) the website is benign itself.
+The latter one is caused by (a) a malicious website without evasion techniques, or (b) a malicious website with evasion techniques, which is not triggered by the mutated profile from \spartacus.
+
+The latter situation is what \spartacus needs to handle.
+As for reason (a), \spartacus relies on the current anti-phishing systems that are well capable of detecting simple phishing websites within a short time period and hence the whole ecosystem can be protected from such phishing attacks.
+For reason (b), the phishing website implements evasion techniques that remain unknown after one visit.
+However, as \spartacus can be used by a large number of users, there is high possibility where a number of users will visit the same URL.
+\spartacus collects all attempts of mutations of web request profiles to such URL and records both successful and failed attempts in the Fingerprinting Knowledgebase so that we can fingerprint the trigger of the evasion technique in the phishing website and apply such configuration for all \spartacus users.
+Before \spartacus figures out the cloaking technique, it implements visual-similarity and content-based phishing detection mechanisms and alerts the user if any of the attributes detected in the content by matching the features with those in Phishing Attribute Database.
+% otherwise, the browser user will see a benign web page content.
+
+
+\subsection{Bot Profile Mutator}
+
+
+\subsection{Privacy}
+
+Note that installing and using \spartacus may lead to the compromise of privacy.
+For example, some discount discovery extension may leak the annual income level of users~\cite{honey}.
+And some of the VPN services require user's location information and Personal Identifiable Information (PII)~\cite{ZenMate}.
+Such privacy information may be leaked and hence abused by attackers.  
+We thereby enumerate the privacy information \spartacus collects to support the phishing evading services.
+
+\subsubsection{Privacy Information}
+
+\spartacus require four types of privacy information from users to prevent them from being trapped in advanced phishing websites.
+We do not collect any PII in \spartacus and hence can protect user's privacy to maximum extent.
+
+% \noindent
+(1)~\emph{URL a user tries to visit}: \spartacus needs it to query the reputation, age of domain, and top reviewed subdomains to determine whether to mutate.
+If \spartacus makes the decision to mutate the profile, it also needs the URL to query the Fingerprinting Knowledgebase for successful mutation that can evade malicious content.
+
+% \noindent
+(2)~\emph{HTTP profile used in the request}:
+After \spartacus decides to mutate the user's HTTP profile before visiting a suspicious website, it requires the user's profile to modify it.
+The privacy information in the profile includes the User-Agent string, where browser version, browser type, and operating system information reside, and the Referer, which implies the previous location of the user.
+By accessing the profile, \spartacus can modify the fingerprints that phishers identify as anti-phishing crawlers to camouflage users.
+
+% \noindent
+(3)~\emph{Returned HTTP response}:
+\spartacus requires the returned HTTP response to inspect whether the website still contains maliciousness.
+For example, if the response status code is 4XX/5XX, it means that there will not be malicious content.
+If there is a 200 content returned,
+an external classification process will determine its maliciousness by searching for phishing content such as sensitive words and log in form~\cite{xiang2011cantina+}.
+The inspection result marks the corresponding profile mutation successful or not.
+
+(4)~\emph{URL and profile share}:
+\spartacus at last uploads the URL and the inspection result along with the corresponding HTTP profile to the server.
+When other users visit the same URL, the successful mutation will be shared to them.
+If there is no successful variant, \spartacus will avoid to use the unsuccessful ones to mutate.
+
+
+\subsubsection{Privacy Consent and Protection}
+
+We ensure that our \spartacus system well considers users' privacy information,
+so we have both consent and protection methodology to notice users and prevent their information from being stolen and abused.
+
+\noindent
+\textbf{Consent.}
+To have users be aware of the types of privacy information \spartacus checks and modifies before using it,
+we set up a privacy policy consent notice when people first time use \spartacus.
+At the beginning of the consent, we summarize the privacy information \spartacus use for user's convenience.
+Then, by using Privacy Policies~\cite{privacypolicy}, 
