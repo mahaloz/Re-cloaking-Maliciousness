@@ -69,30 +69,50 @@ When the URL does not fall into either Blacklist or Whitelist filter, \spartacus
 If a record is found in the knowledgebase, \spartacus will mutate the web request profile according to the record to make sure that such web request profile will return a benign web page content;
 otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which randomly selects one profile from Anti-phishing Bot Profile Database to submit the web request and lowers the impact to possible web page layout to the lowest.
 
-\noindent
-\textbf{Maliciousness Classification.}
-After submitting the web request to the server, \spartacus along with the browser will receive a response from the server.
-There are different situations of the response as follows:
-
-(1) The server responds either a benign page or an error page with status code of 4XX/5XX, or, it redirects the visit to a benign website, which is typically the website it impersonates;
-
-(2) The server returns malicious web page content.
-
-\noindent
-The former result is because (a) the server is malicious with evasion techniques and determines the visit from \spartacus as anti-phishing bot visit, or (b) the website is benign itself.
-The latter one is caused by (a) a malicious website without evasion techniques, or (b) a malicious website with evasion techniques, which is not triggered by the mutated profile from \spartacus.
-
-The latter situation is what \spartacus needs to handle.
-As for reason (a), \spartacus relies on the current anti-phishing systems that are well capable of detecting simple phishing websites within a short time period and hence the whole ecosystem can be protected from such phishing attacks.
-For reason (b), the phishing website implements evasion techniques that remain unknown after one visit.
-However, as \spartacus can be used by a large number of users, there is high possibility where a number of users will visit the same URL.
-\spartacus collects all attempts of mutations of web request profiles to such URL and records both successful and failed attempts in the Fingerprinting Knowledgebase so that we can fingerprint the trigger of the evasion technique in the phishing website and apply such configuration for all \spartacus users.
-Before \spartacus figures out the cloaking technique, it implements visual-similarity and content-based phishing detection mechanisms and alerts the user if any of the attributes detected in the content by matching the features with those in Phishing Attribute Database.
-% otherwise, the browser user will see a benign web page content.
 
 
 \subsection{Bot Profile Mutator}
 
+It is the Bot Profile Mutator that takes responsibility of profile mutation to evade malicious content in advanced phishing websites.
+There are several items in the HTTP profile that can be modified or changed to camouflage the user as anti-phishing crawlers.
+Take User-Agent as an example. 
+Generally, anti-phishing crawlers contain ``bot'', ``crawler'', or the name of the company such as ``Google'', ``PayPal'' in the User-Agent string.
+We name the words that can trigger the cloaking technique in phishing attacks as \emph{triggering words}.
+Scripts in the phishing server typically read the string from HTTP requests and filter visits that contain crawler-like patterns.
+Another instance is Referer, where the visit is from previously.
+Typically the previous location for a potential victim is from phishing lures the attackers distributed earlier.
+Hence, phishers can block all visits who are not from the phishing lures.
+
+To take advantage of phisher's filtering algorithm, the Bot Profile Mutator modifies the identifiable items in the HTTP profile such as User-Agent and Referer before the browser sends out the request.
+In detail, after querying from the Fingerprinting Knowledgebase, \spartacus will append the successful sensitive word in the knowledgebase to user's own User-Agent string.
+It also checks the necessity of mutation of Referer within the same record.
+If there is no successful record in the database,
+the mutator will randomly choose one word from a list of 407 triggering words.
+Additionally, it set the Referer to either None or ``www.google.com'' to further pretend the user as anti-phishing crawler.
+% 407 sensitive words
+
+
+\subsubsection{Maliciousness Classification.}
+After submitting the web request to the server, \spartacus along with the browser will receive a response from the server.
+There are different situations of the response as follows:
+
+\begin{itemize}
+    \item The server responds either a benign page or an error page with status code of 4XX/5XX, or, it redirects the visit to a benign website, which is typically the website it impersonates;
+    \item The server returns malicious web page content.
+\end{itemize}
+
+
+The former result is because (a) the server is malicious with evasion techniques and determines the visit from \spartacus as anti-phishing bot visit, or (b) the website is benign itself.
+The latter one is caused by (a) a malicious website without evasion techniques, or (b) a malicious website with evasion techniques, which is not triggered by the mutated profile from \spartacus.
+
+The latter situation is what \spartacus needs to handle.
+As for reason (a), \spartacus relies on the current anti-phishing systems that are well capable of detecting basic phishing websites within a short time period and hence the whole ecosystem can be protected from such phishing attacks.
+For reason (b), the phishing website implements evasion techniques that remain unknown after one visit.
+However, as \spartacus can be used by a large number of users, there is high possibility where a number of users will visit the same URL.
+\spartacus learns from different attempts of mutations of web request profiles that failed to trigger cloaking in the Fingerprinting Knowledgebase.
+Avoiding using the failed ones, \spartacus mutates the profile with new triggering words from the list, and hence we can eventually fingerprint the trigger of the evasion technique in the phishing website and apply such configuration for all \spartacus users who visit the same URL.
+Before \spartacus figures out the cloaking technique, it implements visual-similarity and content-based phishing detection mechanisms and alerts the user if any of the attributes detected in the content by matching the features with those in Phishing Attribute Database.
+% otherwise, the browser user will see a benign web page content.
 
 \subsection{Privacy}
 
