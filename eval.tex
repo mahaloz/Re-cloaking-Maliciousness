@@ -46,14 +46,14 @@ And thanks to the fact, \spartacus can evade phishing websites generated from su
 
 \begin{figure}[t]
     \centering
-    \begin{subfigure}{0.48\linewidth}
+    \begin{subfigure}{0.8\linewidth}
         \centering
             \includegraphics[width=\textwidth]{figs/netflix_n.pdf}%
         \caption{Default browser visit.}
         \label{fig:normal}
     \end{subfigure}
     ~
-    \begin{subfigure}{0.48\linewidth}
+    \begin{subfigure}{0.8\linewidth}
         \centering
             \includegraphics[width=\textwidth]{figs/netflix_sp.pdf}
         \caption{\spartacus visit.}
@@ -197,7 +197,16 @@ Two domains are inaccessible even in the default browser, so we suspect them off
 For the accessible 58 domains,
 we follow the steps mentioned above to inspect them.
 All of them have the same layout as the visit from the default browser.
+Then we interact the 58 websites by clicking the buttons, chatting online, and adding items into the cart if it is a shopping website.
+All 58 websites performed well.
+At last, we register an account on XYZ websites and they all allow us to do so.
+Even though we can successfully register an account, we still need to make sure that we can log in properly with those accounts to test the authentication process under \spartacus.
+The result shows that all the accounts we registered during the Fine-Grained experiment can be logged in successfully.
+It means that the \spartacus system does not impact the authentication process in the website.
 
+In summary, with the results retrieved from both coarse- and fine-grained experiment, we can summarize that \spartacus does not impact the accessibility and visibility on high reputation or long age domains, or its top reviewed subdomains.
+Besides, for domains who can be accessed and displayed properly, the functionalities including links, buttons, and registration and authentication in the websites will not be affected.
+Therefore, \spartacus can protect users from visiting advanced phishing websites while keep their normal browsing activities.
 
 % \noindent
 % \textbf{Database Query}.
