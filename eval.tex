@@ -44,26 +44,32 @@ And thanks to the fact, \spartacus can evade phishing websites generated from su
 
 \subsection{Effectiveness}
 
-\begin{figure}[t]
-    \centering
-    \begin{subfigure}{0.8\linewidth}
-        \centering
-            \includegraphics[width=\textwidth]{figs/netflix_n.pdf}%
+
+\begin{figure*}
+\centering
+	\begin{subfigure}[tb]{.31\textwidth}
+		\includegraphics[width=\linewidth]{figs/netflix_n.pdf}
         \caption{Default browser visit.}
         \label{fig:normal}
-    \end{subfigure}
-    ~
-    \begin{subfigure}{0.8\linewidth}
-        \centering
-            \includegraphics[width=\textwidth]{figs/netflix_sp.pdf}
-        \caption{\spartacus visit.}
-        \label{fig:sp}
-    \end{subfigure}
-    
-    \caption{Web page contents from default and \spartacus'ed browser visits for a cloaked phishing website.}
-    \label{fig:effectiveness}
-    % \vspace{-10pt}
-\end{figure}
+	\end{subfigure}%
+	\quad
+	\begin{subfigure}[tb]{.31\textwidth}
+		\includegraphics[width=\linewidth]{figs/netflix_sp.pdf}
+        \caption{\spartacus'ed browser visit with error.}
+        \label{fig:sp1}
+	\end{subfigure}%
+	\quad
+	\begin{subfigure}[tb]{.31\textwidth}
+		\includegraphics[width=\linewidth]{figs/netflix_sp2.png}
+        \caption{\spartacus'ed browser visit with content.}
+        \label{fig:sp2}
+	\end{subfigure}%
+	\quad
+	\vspace{-5pt}
+	\caption{Web page contents from default and \spartacus'ed browser visits for a cloaked phishing website.}
+	\label{fig:effectiveness}
+	\vspace{-10pt}
+\end{figure*}
 
 We evaluate the effectiveness of \spartacus by conducting an experiment where we visit same phishing websites with different configurations of automated browsers, one with default setting, the other with \spartacus to mutate the profile.
 We simulate the default setting automated browser as normal users and the one with \spartacus as users with our system.
@@ -82,7 +88,11 @@ or (3) the destination domain is legitimate, excluding web hosting service domai
 \autoref{fig:effectiveness} demonstrates the difference of response web page content between default and \spartacus'ed browser visit for a cloaked phishing websites.
 The content in~\autoref{fig:normal} shows the phishing content when a real person visits it.
 On the other hand, when \spartacus appends a bot-looking string to the existing User-Agent, such as~\emph{googlebot}, the phishing server considers the visit as from an anti-phishing infrastructure.
-Thus, it denies the request from \spartacus and an error web page is shown as~\autoref{fig:sp}.
+Thus, it denies the request from \spartacus and an error web page is shown as~\autoref{fig:sp1}.
+On the other hand, advanced phishing servers can redirect visit to a benign domain with status code of 200 instead of returning an error.
+In this way, \spartacus'ed browser will receive web page contents such as~\autoref{fig:sp2},
+which also indicates a successful evasion 
+from \spartacus.
 
 It shows that \spartacus can impersonate anti-phishing crawler and trigger the cloaking techniques of advanced phishing websites.
 Because the web page content returned through \spartacus's visit does not contain any maliciousness, Internet users will not be trapped in the attack.
@@ -99,15 +109,39 @@ And hence, \spartacus with the support of the anti-phishing ecosystem can preven
 
 To verify our hypothesis, we evaluate the blacklist speed of current anti-phishing systems on the examined phishing URLs.
 Due to the deployment of this experiment, we did not submit all phishing URLs.
-Among 4,674 submitted phishing URLs, anti-phishing systems such as Google Safe Browsing and VirusTotal can blacklist 4,598 of them.
+Among 4,674 submitted phishing URLs that are not evaded by \spartacus, anti-phishing systems such as Google Safe Browsing and VirusTotal can blacklist 4,598 of them.
 The median detection speed is 28 minutes.
 The rest 76, after our manual inspection, is found that they are falsely reported to APWG.
 The evaluation result verifies that the ecosystem currently can protect users from being trapped in basic phishing attacks.
 
-In contrast, we totally submitted 47,885 URLs that can be evaded by \spartacus.
-The result shows that 31,611 of them are not detected or blacklisted by the anti-phishing systems.
+In contrast, we totally submitted 40,852 URLs that can be evaded by \spartacus.
+The result shows that 24,154 of them are not detected or blacklisted by the anti-phishing systems.
 For URLs that can be detected, the median speed is 154 minutes, compared with that of 28 minutes for basic phishing websites.
 Therefore, \spartacus not only can protect users from advanced phishing websites during the golden hour~\cite{oest2020sunrise} left by the current anti-phishing ecosystem due to process time, but also can evade phishing content even if the ecosystem cannot detect.
+
+\autoref{fig:venn_support} overviews the ability of \spartacus and support from the anti-phishing ecosystem.
+% Among all 45,526 phishing URLs submitted to anti-phishing systems,
+% 21,296 of them can be detected or blacklisted.
+% Due to the imbalance of the amount between evaded and not evaded phishing URLs,
+% we scale the not evaded ones and conduct the analysis.
+% Although the ecosystem can detect or blacklist 21,296 (46.77\%) of the phishing URLs, 
+Within our dataset, advanced phishing websites have overwhelmed the basic ones, which is shown in~\autoref{fig:venn_support} as blue circle and red circle, respectively.
+However, the anti-phishing ecosystem can only detect 40.87\% of the submitted evaded phishing URLs.
+As a comparison, \spartacus can evade 89.73\% of submitted phishing URLs.
+% But the ecosystem can only detect or blacklist 46.77\% of them.
+For the rest that \spartacus cannot evade,
+the ecosystem can mostly handle the not-evaded phishing URLs as a complement of \spartacus.
+With \spartacus and the support from current anti-phishing systems, 
+
+
+
+\begin{figure}
+\centering
+\includegraphics[width=.9\linewidth]{figs/venn_eval_3.pdf}
+\caption{Venn Diagram describing the evasion from \spartacus and support from the anti-phishing ecosystem.}
+\label{fig:venn_support}
+% \vspace{-10pt}
+\end{figure}
 
 
 \subsection{Efficiency and Latency}
@@ -116,8 +150,23 @@ We need to make sure that \spartacus will not impact negatively on the user expe
 From the design of \spartacus, it will introduce latencies, including database query, HTTP profile mutation, and returned content inspection.
 However, the latencies \spartacus introduces can be negligible.
 Therefore, we conduct an experiment to measure the latency for the \spartacus system for the following three perspective, database query, profile mutation, and content inspection.
-We leverage \emph{exthouse}, which analyzes the impact of a browser extension on web performance, as our test bench.
-We run exthouse with 1,000 phishing websites and 1,000 benign websites on two configurations of browsers, one with \spartacus, the other without, and compare the mean rendering time for each group of websites.
+We leverage \emph{exthouse}~\cite{exthouse}, which analyzes the impact of a browser extension on web performance, as our test bench.
+% We run exthouse with 1,000 phishing websites and 1,000 benign websites on two configurations of browsers, one with \spartacus, the other without, and compare the mean rendering time for each group of websites.
+It contains three major measurements:
+(1) Time to Interactive (TTI): the time it takes for the page to become fully interactive with the extension; 
+(2) First Input Delay (FID $\Delta$): the time from when a user first interacts with the website to the time when the browser is actually able to begin processing event handlers in response to that interaction;
+and (3) Scripting Time (Scripting $\Delta$): the amount of time JavaScript execution in the extension.
+The lower these three factors are, the better the website performs with the tested extension.
+At last, \emph{exthouse} will score of the extension.
+A higher score reflects a better performance of the extension.
+
+\exthouse
+
+\autoref{tab:exthouse} illustrates the metrics of top 10 Chrome extensions~\cite{exthouse} along with \spartacus under the inspection of \emph{exthouse}.
+We test these extensions with 100 websites, including both benign and malicious, and average the metrics.
+\spartacus has a score of 100, 0 FID and scripting delta, and 800 ms of TTI.
+It means that with \spartacus, users can still interact with the website with minimum latency.
+The inspection result shows that \spartacus out-scores popular Chrome extensions and does not impact the performance of websites, compared with other extensions.
 
 \subsection{Impact on Benign Website}
 
@@ -153,16 +202,16 @@ The logic is shown in~\Cref{alg:mutatelogic}.
   \caption{Logic of mutating HTTP profile}
 \begin{algorithmic}[1]
 
-\State $p = default\_profile$
+\State $p_d = default\_profile$
 \State $u = url\_to\_visit$
 
 \If{\State $reputation(u)~\leq Neutral$ \texttt{and}
 \State $duration(u)~\geq 1,501$ \texttt{or} 
 \State $d.domain$ NOT in top reviewed sub-domains}
-    \State $p = mutate\_http\_profile(p)$
+    \State $p_n = mutate\_http\_profile(p_d)$
 \EndIf
 
-\State $send\_request(p)$
+\State $send\_request(p_n)$
 
 \end{algorithmic}
 \label{alg:mutatelogic}
