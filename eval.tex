@@ -194,11 +194,72 @@ To evaluate the potential impacts to benign website, we conduct two experiments:
 
 \subsubsection{Coarse-Grained Experiment}
 
+\coarsegrain
+
 In Coarse-Grained experiment, we intend to evaluate if \spartacus system has negative impact on the access to the website or the website layout.
 So we visit 60,848 (9.66\%) out of 629,843 URLs in Alexa Top One Million Domain List~\cite{AlexaTop1M} in both default and \spartacus'ed browsers.
 We compare the web page screenshot and HTML similarity on the visited URLs.
+The result is shown in~\autoref{tab:coarsegrain}.
 Among them, 0.25\% (150) block the access from \spartacus'ed browser;
 0.20\% (124) have different layouts.
+
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+            \includegraphics[width=\textwidth]{figs/38_normal.png}%
+        \caption{Default browser visit.}
+        \label{fig:coarse_normal}
+    \end{subfigure}
+    ~
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+            \includegraphics[width=\textwidth]{figs/38_sp.png}
+        \caption{\spartacus visit}
+        \label{fig:coarse_sp}
+    \end{subfigure}
+    
+    \caption{Difference due to the shape of buttons.}
+    \label{fig:coarse}
+    % \vspace{-10pt}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+            \includegraphics[width=\textwidth]{figs/2306_normal.png}%
+        \caption{Default browser visit.}
+        \label{fig:2306_normal}
+    \end{subfigure}
+    ~
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+            \includegraphics[width=\textwidth]{figs/2306_sp.png}
+        \caption{\spartacus visit}
+        \label{fig:2306_sp}
+    \end{subfigure}
+    
+    \caption{Difference due to popup.}
+    \label{fig:2306}
+    % \vspace{-10pt}
+\end{figure}
+
+We first examine the reason why \spartacus'ed browser show different layouts from the default browser.
+And we find that although the screenshot and HTML similarity is not high between default and \spartacus browser visits,
+to people, such difference does not impact them using or browsing the website.
+For example, two web pages are different in terms of screenshot similarity between default and \spartacus browser visits shown in~\autoref{fig:coarse}.
+The difference is due to the shape of buttons and different of background color.
+% The change is on the scrolling promotion ads in the \texttt{div} tag.
+% When the screenshot was captured in default visit, Ad One happened to show;
+% and another Ad was in the way when \spartacus took the screenshot.
+Similarly, in~\autoref{fig:2306}, a window popped up to ask for the permission of cookie in default browser, but did not in \spartacus's visit.
+The cookie request pop-up is missing in \spartacus browser, not due to the extension itself, but because we visit the same website 10 times in different browsers without \spartacus, only for 3 times the pop-up appeared.
+Even though our evaluation script can distinguish the difference between visits from two browsers,
+users will not perceive that.
+They can normally interact with the websites with \spartacus providing phishing-evading services.
+% , which indicates that \spartacus does not make users perceive the difference, even if it has 
+
 
 To further differentiate between a legitimate anti-bot page and a phishing one that appears due to cloaking,
 we extract domain reputation~\cite{reputation}, registration duration~\cite{whois}, and top viewed sub-domains~\cite{topviewedsubdomains} of URLs from false-positive (FP) and true-positive (TP) sides.
@@ -235,11 +296,17 @@ The logic is shown in~\Cref{alg:mutatelogic}.
 \label{alg:mutatelogic}
 \end{algorithm}
 
-We re-run the evaluation based on the threshold and find that 121 out of the 150 legitimate domains show same web page content on both default and \spartacus'ed browsers.
+We re-run the evaluation based on the threshold and find that 121 out of the 150 legitimate domains show same web page content on both default and \spartacus'ed browsers, as listed in~\autoref{tab:coarsegrain}.
 Hence, only 0.04\% of 60,848 domains are falsely evaded.
+Additionally, 39 of the domains show different layouts between default and \spartacus browsers.
+As we discussed above, such difference will not affect the activities of normal users,
+but after applying~\Cref{alg:mutatelogic}, \spartacus and normal browsers perform more alike on benign domains.
 As comparison, all the phishing URLs can still be evaded through \spartacus because they all triggered the condition to invoke \emph{mutate\_http\_profile()}.
 
 \subsubsection{Fine-Grained Experiment}
+
+\finegrain
+
 
 In Fine-Grained experiment, we aim to exercise and evaluate the operation of websites visited through \spartacus.
 It was inspired by the methodology used by Snyder et al.~\cite{snyder2017most} and Trickel et al.~\cite{trickel2019everyone}.
@@ -259,6 +326,8 @@ There are four steps in the experiment.
 (5) At last, we test the authentication functionality to make sure that \spartacus extension will not impact it.
 
 We randomly selected 60 domains from Alexa Top One Million List, especially 20 every 200 thousands.
+The result is displayed in~\autoref{tab:finegrain}.
+As a comparison, default browser has the same result as that of \spartacus.
 Among the 60 legitimate domains, we can access 58 of them.
 Two domains are inaccessible even in the default browser, so we suspect them offline already.
 For the accessible 58 domains,
