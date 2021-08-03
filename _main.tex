@@ -141,15 +141,17 @@ Phishers implement cloaking techniques to evade detection from anti-phishing sys
 The anti-phishing ecosystem has been devoting to reveal real phishing content behind cloaks.
 However, it has few progress because phishers can always enrich their fingerprinting database by adding new rules to distinguish traffics from the ecosystem and hence evade the visit.
 
-According to the situation where cloaking techniques are widely implemented in phishing attacks and the goal of anti-phishing is to prevent Internet users to see phishing contents, we consider the security problem from a different perspective: instead of trying best to reveal phishing content, we can leverage the cloaking techniques in phishing to prevent users to see phishing content. In this work, we propose \emph{Spartacus}, a framework that disguise Internet users as anti-phishing crawlers to request web page content of a suspicious URL, while remain users' own profiles on visiting whitelisted websites.
+According to the situation where cloaking techniques are widely implemented in phishing attacks and the goal of anti-phishing is to prevent Internet users to see phishing contents, we consider the security problem from a different perspective: instead of trying best to reveal phishing content, we can leverage the cloaking techniques in phishing to prevent users to see phishing content. In this work, we propose \emph{Spartacus}, a framework that disguise Internet users as anti-phishing crawlers to request web page content of a suspicious URL, while remain users' own profiles on visiting benign websites.
 
-\textcolor{blue}{Evaluation plan:}
-We evaluated Spartacus from different aspects: (1) Effectiveness: we have two groups open reported phishing websites, one with normal browser, the other with ``Spartacused'' browser, for three months. We expect to show Group 1 saw way more phishing than Group 2.
-(2) Efficiency: Two groups visit same amount of websites to test the latency of Spartacus.
-Also we use Spartacus to visit legitimate websites to evaluate the impact (layout of the websites).
-Then, we evaluate how difficult is to maintain our Spartacus system.
-(3) adversarial mindset
-(4) other fingerprints to get
+
+
+% \textcolor{blue}{Evaluation plan:}
+% We evaluated Spartacus from different aspects: (1) Effectiveness: we have two groups open reported phishing websites, one with normal browser, the other with ``Spartacused'' browser, for three months. We expect to show Group 1 saw way more phishing than Group 2.
+% (2) Efficiency: Two groups visit same amount of websites to test the latency of Spartacus.
+% Also we use Spartacus to visit legitimate websites to evaluate the impact (layout of the websites).
+% Then, we evaluate how difficult is to maintain our Spartacus system.
+% (3) adversarial mindset
+% (4) other fingerprints to get
 
 \end{abstract}
 
@@ -159,6 +161,8 @@ Then, we evaluate how difficult is to maintain our Spartacus system.
 \input{background}
 \input{design}
 \input{eval}
+\input{discussion}
+\input{limitation}
 \input{relatedwork}
 
 % %-------------------------------------------------------------------------------

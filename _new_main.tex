@@ -1,0 +1,200 @@
+\documentclass[conference]{IEEEtran}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+% to be able to draw some self-contained figs
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{comment}
+\usepackage{pdfcomment}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{epstopdf}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{listing}
+\usepackage{paralist}
+\usepackage{arydshln}
+\let\labelindent\relax
+\usepackage{enumitem,amssymb}
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{balance}
+\usepackage{endnotes}
+\usepackage{xspace}
+\usepackage{times}
+\usepackage{amsfonts}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{soul}
+\usepackage[normalem]{ulem}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{cleveref}
+
+\renewcommand{\citepunct}{,\penalty\citepunctpenalty\,}
+\renewcommand{\citedash}{--}
+
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+
+% \newcommand{\crawlphish}{{\scshape CrawlPhish}\xspace}
+\newcommand{\crawlphish}{{CrawlPhish}\xspace}
+\newcommand{\spartacus}{{Spartacus}\xspace}
+
+
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{bluegray}{rgb}{0.4, 0.6, 0.8}
+\definecolor{darkpastelgreen}{rgb}{0.01, 0.75, 0.24}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, script},
+  keywordstyle=\color{bluegray}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{darkpastelgreen}\ttfamily,
+  stringstyle=\color{blue}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   xleftmargin=0.25cm,
+   numbers=left,
+   numberstyle=\tiny,
+   numbersep=5pt,
+   tabsize=2,
+   breaklines=true,
+   frame=tb,
+   showtabs=false,
+   captionpos=b
+}
+
+\hypersetup{
+    colorlinks,
+    urlcolor={[rgb]{0,0,1}}, 
+    citecolor={[rgb]{0,0,0.3}}, 
+    linkcolor={[rgb]{0,0,0.3}},
+    breaklinks=true,
+}
+
+\newcommand{\Tstrut}{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand{\Bstrut}{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+
+\newcommand{\commentontext}[2]{\colorbox{yellow}{#1}\pdfcomment[color={0.234 0.867 0.211},hoffset=-6pt,voffset=10pt,opacity=0.5]{#2}}
+\newcommand{\commentatside}[1]{\pdfcomment[color={0.045 0.278 0.643},icon=Note]{#1}}
+% Compatibality with packages todo, easy-todo, todonotes
+\newcommand{\todo}[1]{\commentatside{#1}}
+% Compatiblity with package fixmetodonotes
+\newcommand{\TODO}[1]{\commentatside{#1}}
+
+\newcommand{\etc}{\textit{etc.}}
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\tick}{\ding{51}}
+\newcommand{\cross}{\ding{55}}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=.5pt] (char) {#1};}}
+            
+% \newcommand{\myhl}[1]{{\color{blue}#1}}
+\newcommand{\myhl}{}
+
+% \newcommand{\redsout}{\bgroup\markoverwith{\textcolor{red}{\rule[0.5ex]{2pt}{0.7pt}}}\ULon}
+\newcommand{\redsout}[1]{}
+% \newcommand{\redsout}[print-env=false]{}
+
+\graphicspath{{./figs/}}
+
+\pagenumbering{gobble}
+%\date{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%\title{\crawlphish: an Automated Analysis Framework for Client-side Phishing Cloaking Techniques}
+\title{\spartacus: Cloak Users Against Cloaked Phishing Websites}
+
+% \author{
+% \IEEEauthorblockN{
+% Penghui Zhang\IEEEauthorrefmark{1},
+% Adam Oest\IEEEauthorrefmark{1}\IEEEauthorrefmark{2}, 
+% Haehyun Cho\IEEEauthorrefmark{4}, 
+% Zhibo Sun\IEEEauthorrefmark{1},
+% RC Johnson\IEEEauthorrefmark{2},
+% Brad Wardman\IEEEauthorrefmark{2},
+% Shaown Sarker\IEEEauthorrefmark{3},\\
+% Alexandros Kapravelos\IEEEauthorrefmark{3},
+% Tiffany Bao\IEEEauthorrefmark{1},
+% Ruoyu Wang\IEEEauthorrefmark{1},
+% Yan Shoshitaishvili\IEEEauthorrefmark{1},
+% Adam Doup\'{e}\IEEEauthorrefmark{1} and 
+% Gail-Joon Ahn\IEEEauthorrefmark{1}\IEEEauthorrefmark{5}
+% }
+% \IEEEauthorblockA{
+% \IEEEauthorrefmark{1}Arizona State University,
+% \IEEEauthorrefmark{4}Soongsil University,
+% \IEEEauthorrefmark{2}PayPal, Inc.,
+% \IEEEauthorrefmark{3}North Carolina State University,
+% \IEEEauthorrefmark{5}Samsung Research
+% \\
+% \IEEEauthorrefmark{1}\{penghui.zhang, aoest, zhibo.sun, tbao, fishw, yans, doupe, gahn\}@asu.edu\\
+% \IEEEauthorrefmark{4}haehyun@ssu.ac.kr,
+% \IEEEauthorrefmark{2}\{raouljohnson, bwardman\}@paypal.com,
+% \IEEEauthorrefmark{3}\{ssarker, akaprav\}@ncsu.edu}}
+
+\maketitle
+
+% \thispagestyle{plain}
+% \pagestyle{plain}
+
+\input{_tables}
+
+\begin{abstract}
+	\input{abstract}
+\end{abstract}
+
+\input{introduction}
+\input{background}
+\input{design}
+\input{eval}
+\input{discussion}
+\input{limitation}
+\input{relatedwork}
+
+
+
+\bibliographystyle{IEEEtranS}
+\bibliography{reference}
+
+% \input{appendix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

@@ -64,7 +64,7 @@ With Filtering Algorithm    & 60,848                              & 60,688      
                                                &                                       & \multirow{4}{*}{Functionality}                     & \multirow{4}{*}{58}                     & Click buttons                                          & 58                                       \\
                                                &                                       &                                                    &                                         & Online chat                                            & 3                                        \\
                                                &                                       &                                                    &                                         & Shopping cart                                          & 5                                        \\
-                                               &                                       &                                                    &                                         & Registration/login                                     & 22/22                                    \\ \midrule
+                                               &                                       &                                                    &                                         & Registration/login                                     & 15/15                                    \\ \midrule
 Not Accessible                                 & 2                                     & \multicolumn{4}{c}{\multirow{2}{*}{-}}                                                                                                                                                           \\ \cline{1-2}
 Total                                          & 60                                    & \multicolumn{4}{c}{}                                                                                                                                                                             \\ \bottomrule
 \end{tabular}
@@ -72,5 +72,24 @@ Total                                          & 60                             
 \caption{Fine-grained experiment result of~\spartacus.}
 \label{tab:finegrain}
 % \vspace{10pt}
+\end{table}
+}
+
+
+\newcommand{\newmleval}{
+\begin{table}[]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{crrrrrr}
+\toprule
+\textbf{Model}                                                        & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Precision \\ (\%)\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Recall \\ (\%)\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}FPR\\ (\%)\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}FNR\\ (\%)\end{tabular}}} & \multicolumn{1}{c}{\textbf{F1}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}ACC\\ (\%)\end{tabular}}}  \\ \midrule
+
+CANTINA+                                                              & 95.45                                                                                  & 54.60                                                                               & 2.60                                                                            & 45.40	                                                                           & 0.69                            & 76.00                                                                                                                     \\ \bottomrule
+\end{tabular}
+}
+\caption{Evaluation metrics of CANTINA+~\cite{xiang2011cantina+} against cloaked phishing websites.} 
+
+\label{tab:newmleval}
+% \vspace{-10pt}
 \end{table}
 }

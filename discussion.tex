@@ -1,0 +1,31 @@
+\section{Evading Server-side Cloaked Phishing}
+
+According to our observation and analysis in~\Cref{s:eval}, phishers take advantage of server-side cloaking techniques in their attacks.
+The exclusive feature of such evasion is to inspect the HTTP profile of the visitor and to respond with the corresponding content,
+the algorithm of which, still, remains behind the scene.
+Phishers adopt the strategy because they believe that it is difficult to depict their evasion algorithms.
+Even though one phishing website can be detected and blacklisted, they can re-generate another and continue harming the whole anti-phishing ecosystem.
+Phishers decide that rather than blocking all suspicious visits that may contain ones from potential victims, they will not allow one from anti-phishing systems in.
+We expect that the sophistication of phishing website will continue to grow and the advanced phishing kits will set more criteria to inspect, match, and block the suspicious in-coming request.
+Although researchers and organizations have proposed mitigations phishing websites~\cite{xiang2011cantina+, lin2021phishpedia}, they all require malicious web page content to feed the classifier and make the decision.
+Server-side cloaking techniques deny the requests from the anti-phishing systems and their methodologies may not be useful.
+We select 500 cloaked phishing websites that can evaded by \spartacus and 500 benign websites from Alexa Top One Million list to test CANTINA+~\cite{xiang2011cantina+}, which is a phishing classifier with URL, web, and HTML based features.
+The result in~\autoref{tab:newmleval} shows that it has a high false-negative rate when classifying cloaked phishing websites.
+Therefore, the ecosystem should ensure
+that existing and new detection and mitigation systems are capable of adapting to such evasion techniques.
+
+\newmleval
+
+To mitigate phishing websites with server-side cloaking techniques, anti-phishing crawlers should carefully modify their HTTP requests to pretend as much alike human visitors as possible.
+In this case, the crawlers can bypass the cloaking techniques and hence can retrieve the real malicious content.
+For example, they should avoid sending requests based on the IP addresses of well-known anti-phishing entities.
+Besides, crawler- and famous-brand- looking strings should not be used in User-Agent or host name.
+In addition, a suspicious website returning a benign-looking web page to anti-phishing crawlers, does not mean that this website should be marked as benign.
+Instead, crawlers should attempt to visit the website with different HTTP profiles before making the decision.
+
+Also, to protect Internet users from advanced phishing websites timely and trivially, \spartacus can be adopted into the browser directly.
+Without cumbersome procedures such as submitting suspicious URLs, retrieving correct web page content, classifying maliciousness, and notifying users,
+\spartacus can evade malicious content on phishing websites with fingerprinting cloaking techniques.
+Users will not differentiate between a default browser and a \spartacus'ed one, according to our evaluation in~\Cref{s:eval}.
+For phishers, they have the similar feeling, but they cannot differentiate the HTTP requests from real visitors and anti-phishing crawlers.
+Therefore, \spartacus would be particularly helpful in instantly evading phishing websites that implement cloaking techniques with high confidence.
