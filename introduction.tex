@@ -33,3 +33,31 @@ If not, \spartacus allows the request sent with user's default profile.
 Otherwise, \spartacus mutates the items in the HTTP profile that will be inspected by cloaking techniques in the phishing server before sending requests to suspicious URLs.
 When the cloaking script examines the HTTP request, it will identify that the visit is from an anti-phishing infrastructure, and will return a benign-looking web page content to users.
 
+We first perform an evaluation to analyze the prevalence of fingerprinting cloaking techniques in phishing kit and the ability of current anti-phishing systems against phishing websites.  
+In total, we analyzed ABC phishing kits and discovered that XYZ of them contain fingerprinting cloaking techniques, which shows that such evasion is the most prevalent within our dataset.
+Additionally, we notice that current anti-phishing systems can timely detect and blacklist 98.33\% of basic phishing websites that show phishing content to any HTTP profile.
+However, when encountering with advanced phishing websites with fingerprinting cloaking (showing different content to different profile), they do not perform well.
+Only 40.87\% of the websites can be detected, and the detection time is more than three times as that on basic phishing.
+
+We deploy the \spartacus framework in large-scale to evaluate the effectiveness, efficiency, and potential impact on users' browsing activity.
+In total, over a period of nine months from late-2020 to mid-2021, \spartacus visits 160,728 phishing websites in the wild and evades 82.28\% of them.
+In addition, the \spartacus framework as a browser extension has negligible reaction and scripting time, compared with other popular plugins~\cite{exthouse}, and hence it does not slow down the web page rendering of the benign websites.
+People who use \spartacus will not perceive its existence.
+At last, we analyze the performance of \spartacus on benign websites both automatically and manually.
+We found that with \spartacus installed, the benign website can still display properly.
+Functionalities in the website such as buttons/links, online chat, register/login, shopping cart and checkout can correctly perform without any error.
+
+To bypass \spartacus, phishers can only disable some criteria and allow more traffic in, because they fail to tell the difference between human traffic and crawler traffic.
+However, this loose strategy will enable more crawlers in and hence the websites can be blocked faster.
+Our \spartacus framework can be further implemented in web browsers to continuously protect users from fingerprinting-cloaked phishing websites.
+The methodology can not only directly reduce the ``golden hour'' current anti-phishing systems leave for phishers,
+but also trap the attackers into a dilemma that they have to think of another approach to mitigate.
+Our contributions are thus as follows:
+
+\begin{itemize}
+    \item An analysis of modern phishing kits to understand the prevalence of fingerprinting cloaking techniques.
+    \item An evaluation of current anti-phishing systems to reveal the less capability against phishing websites with such evasion.
+    \item An automated framework that can evade phishing websites with fingerprinting cloaking while negligibly impact user's browsing activity.
+    \item An evaluation for \spartacus to measure its effectiveness and efficiency.
+    \item A dilemma where phishers cannot differentiate crawler and human visits and hence lose the chance to lure credentials.
+\end{itemize}
