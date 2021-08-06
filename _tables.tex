@@ -21,39 +21,40 @@
 
 
 \newcommand{\exthouse}{
-\begin{table}[t]
+\begin{table*}[t]
 \centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}{crrrr}
+\resizebox{.9\linewidth}{!}{
+\begin{tabular}{crrrrrrrrrrrr}
 \toprule
-\textbf{Extension}               & \multicolumn{1}{c}{\textbf{Score}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}FID $\Delta$ \\ ( ms )\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Scripting $\Delta$ \\ ( ms )\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}TTI \\ (ms)\end{tabular}}} \\ \midrule
+                                & \multicolumn{2}{c}{\textbf{Score}}            & \multicolumn{2}{c}{\textbf{FID $\Delta$ (ms)}}   & \multicolumn{2}{c}{\textbf{Scripting $\Delta$ (ms)}} & \multicolumn{2}{c}{\textbf{TTI (ms)}}           & \multicolumn{2}{c}{\textbf{Added Long Task (ms)}} & \multicolumn{2}{c}{\textbf{Extra CPU Time (ms)}} \\
+\multirow{-2}{*}{\textbf{Name}} & \multicolumn{1}{c}{B} & \multicolumn{1}{c}{M} & \multicolumn{1}{c}{B} & \multicolumn{1}{c}{M} & \multicolumn{1}{c}{B}   & \multicolumn{1}{c}{M}   & \multicolumn{1}{c}{B} & \multicolumn{1}{c}{M}   & \multicolumn{1}{c}{B}   & \multicolumn{1}{c}{M}   & \multicolumn{1}{c}{B}   & \multicolumn{1}{c}{M}  \\ \midrule
 \rowcolor[HTML]{EFEFEF} 
-Grammarly for Chrome        & 50                                 & 114                                                                                      & 530                                                                                            & 1,300                                                                            \\
+Grammarly for Chrome            & 50                    & 60                    & 20                    & 190                   & 300                     & 1,000                   & 1,300                 & 3,500                   & 380                     & 1,740                   & 300                     & 961                    \\
 \rowcolor[HTML]{C0C0C0} 
-Adblock Plus                & 59                                 & 118                                                                                      & 760                                                                                            & 900                                                                              \\
+Adblock Plus                    & 59                    & 100                   & 20                    & 20                    & 0                       & 100                     & 900                   & 3,300                   & 0                       & 0                       & 0                       & 0                      \\
 \rowcolor[HTML]{EFEFEF} 
-Skype                       & 82                                 & 150                                                                                      & 120                                                                                            & 900                                                                              \\
+Skype                           & 82                    & 74                    & 140                   & 130                   & 100                     & 300                     & 900                   & 3,300                   & 130                     & 250                     & 141                     & 277                    \\
 \rowcolor[HTML]{C0C0C0} 
-Avira Browser Safety        & 94                                 & 60                                                                                       & 30                                                                                             & 1,100                                                                            \\
+Avira Browser Safety            & 94                    & 90                    & 60                    & 50                    & 100                     & 200                     & 1,100                 & 3,600                   & 0                       & 110                     & 63                      & 112                    \\
 \rowcolor[HTML]{EFEFEF} 
-Avast SafePrice             & 99                                 & 62                                                                                       & 0                                                                                              & 1,100                                                                            \\
+Avast SafePrice                 & 99                    & 68                    & 120                   & 90                    & 100                     & 200                     & 1,100                 & 4,000                   & 310                     & 400                     & 67                      & 82                     \\
 \rowcolor[HTML]{C0C0C0} 
-AdBlock                     & 100                                & 0                                                                                        & 0                                                                                              & 1,000                                                                            \\
+AdBlock                         & 100                   & 100                   & 50                    & 20                    & 0                       & 100                     & 1,000                 & 3,300                   & 0                       & 0                       & 0                       & 0                      \\
 \rowcolor[HTML]{EFEFEF} 
-Google Translate            & 100                                & 0                                                                                        & 0                                                                                              & 900                                                                              \\
+Google Translate                & 100                   & 100                   & 20                    & 20                    & 0                       & 100                     & 900                   & 3,200                   & 0                       & 0                       & 0                       & 0                      \\
 \rowcolor[HTML]{C0C0C0} 
-Pinterest Save Button       & 100                                & 0                                                                                        & 0                                                                                              & 800                                                                              \\
+Pinterest Save Button           & 100                   & 100                   & 30                    & 30                    & 0                       & 100                     & 800                   & 3,200                   & 0                       & 0                       & 0                       & 0                      \\
 \rowcolor[HTML]{EFEFEF} 
-Tampermonkey                & 100                                & 0                                                                                        & 0                                                                                              & 1,000                                                                            \\
+Tampermonkey                    & 100                   & 100                   & 20                    & 20                    & 0                       & 100                     & 1,000                 & 3,400                   & 0                       & 0                       & 0                       & 0                      \\
 \rowcolor[HTML]{C0C0C0} 
-uBlock Origin               & 100                                & 0                                                                                        & 0                                                                                              & 1,000                                                                            \\ \midrule
-\textit{\textbf{Spartacus}} & \textit{\textbf{100}}              & \textit{\textbf{0}}                                                                      & \textit{\textbf{0}}                                                                            & \textit{\textbf{800}}                                                            \\ \bottomrule
+uBlock Origin                   & 100                   & 100                   & 20                    & 20                    & 0                       & 100                     & 1,000                 & 3,600                   & 0                       & 0                       & 0                       & 0                      \\ \midrule
+\textbf{Spartacus}              & \textbf{100}          & \textit{\textbf{100}} & \textbf{20}           & \textit{\textbf{20}}  & \textbf{0}              & \textit{\textbf{100}}   & \textbf{800}          & \textit{\textbf{3,200}} & \textit{\textbf{0}}     & \textit{\textbf{0}}     & \textit{\textbf{0}}     & \textit{\textbf{0}}    \\ \bottomrule
 \end{tabular}
 }
-\caption{Exthouse metrics of top 10 Chrome extensions~\cite{exthouse} along with \spartacus.}
+\caption{Exthouse metrics of top 10 Chrome extensions~\cite{exthouse} along with \spartacus when visiting \textbf{B}enign and \textbf{M}alicious websites.}
 \label{tab:exthouse}
 % \vspace{10pt}
-\end{table}
+\end{table*}
 }
 
 
@@ -65,7 +66,7 @@ uBlock Origin               & 100                                & 0            
 \toprule
 \textbf{Experiment}         & \multicolumn{1}{c}{\textbf{Tested}} & \multicolumn{1}{c}{\textbf{Passed}} & \multicolumn{1}{c}{\textbf{Blocked}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Different \\ Layout\end{tabular}}} \\ \midrule
 Without Filtering Algorithm & 60,848                              & 60,574                              & 150                                  & 124                                                                                      \\
-With Filtering Algorithm    & 60,848                              & 60,688                              & 121                                  & 39                                                                                       \\ \bottomrule
+With Filtering Algorithm    & 60,848                              & 60,688                              & 29                                  & 39                                                                                       \\ \bottomrule
 \end{tabular}
 }
 \caption{Coarse-grained experiment result of~\spartacus with and without applying Logic of mutating HTTP profile in~\Cref{alg:mutatelogic}.}

@@ -46,20 +46,24 @@ As discussed in~\autoref{s:background}, fingerprinting cloaking techniques in ph
 In \spartacus design, we only consider to mutate User-Agent and Referrer in the HTTP request.
 This is because without permission from server owners, we cannot use their IP and Hostname to route our HTTP request.
 So, it may contain a limitation where \spartacus cannot evade phishing websites that only identify crawlers/bots by IPs and Hostnames.
-However, with our analysis on phishing kits, we found that all phishing kits with fingerprinting cloaking techniques implemented IP, User-Agent, Referrer, and Hostnames.
-This is because phishers want to block every suspicious visit that may be from anti-phishing infrastructures.
-And hence the attackers accumulate many criteria to evade crawlers.
-For example, there are 407 sensitive words phishing kits check to deny request, and one kit blocks as many as 2,827,521 IPs using regular expression.
+However, with our analysis on phishing kits, we found that 83.28\% of phishing kits with fingerprinting cloaking techniques implemented User-Agent checker.
+With the high usage ratio of the User-Agent checker, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
+% This is because phishers want to block every suspicious visit that may be from anti-phishing infrastructures.
+For the rest 17\% of advanced phishing websites that only inspect IP addresses, they can be trivially detected by anti-phishing systems whose IPs are not in the list.
+Further, the \spartacus framework can be deployed through collaboration of anti-phishing systems and web browsers.
+By that time, it can implement IP mutator to strength the evasion power.
+% And hence the attackers accumulate many criteria to evade crawlers.
+% For example, there are 407 sensitive words phishing kits check to deny request, and one kit blocks as many as 2,827,521 IPs using regular expression.
 % 2,818,048 + 9,472 + 1
-Therefore, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
+% Therefore, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
 
-\subsection{\spartacus Evaluation}
+\subsection{\spartacus Deployment and Evaluation}
 
 \noindent
 \textbf{Phishing kit analysis.}
 In the analysis to understand the prevalence of fingerprinting cloaking, we hope to include as many phishing kits as possible to have a comprehensive analysis.
 Due to the resource limitation, we only did our analysis on phishing kits from \emph{phishunt.io}~\cite{phishunt} and those from public dataset from Cisco.
-Within both resources, we were able to analyze XYZ phishing kits and summarized that the fingerprinting cloaking techniques exist in XX\% of the phishing kits.
+Within both resources, we were able to analyze 2,657 phishing kits and summarized that the fingerprinting cloaking techniques exist in 98.57\% of the phishing kits.
 We believe that such analysis can describe its prevalence preliminarily to indicate the potential usage of our \spartacus framework.
 
 
@@ -70,7 +74,18 @@ And due to infrastructure and resource limitations, we were only able to test \s
 Even though additional data crawling would be desirable to evaluate \spartacus,
 the APWG dataset can provide the breadth of phishing data collection because it contains different types of phishing websites targeting different brands, which are submitted periodically by collaborating members including anti-phishing systems and financial organizations impersonated by phishing websites.
 Besides, we have tested \spartacus on over 130,000 live phishing websites and verified that it can evade malicious content.
-Therefore, we believe such limitation can be mitigated to some extent.
+Therefore, we believe such limitation can be mitigated to the extent of our best effort.
 
 \noindent
-\textbf{}
+\textbf{Fingerprinting knowledgebase.}
+In the deployment of \spartacus, we stored the record of suspicious URLs locally when users visit them.
+We also uploaded the local copy to merge with the records in the server and downloaded the newest list from the server periodically (once a day).
+This may cause a restriction in the large scale deployment: users may not always have the up-to-date fingerprinting knowledgebase, and their local mutation history may not be shared with other users in time.
+One mitigation is that \spartacus can follow the trajectory of Google Safe Browsing when it is deployed in practice.
+There is a local and backend fingerprinting knowledgebase as before, and the knowledgebase is updated periodically.
+When \spartacus cannot find any record in the knowledgebase, it can query the backend server using the first 32 bit of hash.
+If a hit, \spartacus will use or avoid certain profiles;
+otherwise \spartacus will mutate the profile as usual.
+Therefore, users in practice can get up-to-date mutation records if there is a miss in the local knowledgebase, although with a trade-off: the latency waiting for the server query.
+% In the evaluation of \spartacus's effectiveness, we determine the returned web page content as benign if (1) the server returns error code or redirects the visit to a benign domain and (2) an external inspector examines the features in returned content and does not find maliciousness.
+% In the latter one, there may contain a limitation where \spartacus cannot evade phishing websites with client-side cloaking techniques 

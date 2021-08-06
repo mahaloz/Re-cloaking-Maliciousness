@@ -1,0 +1,30 @@
+\section{Prevalence of Fingerprinting Cloaking}
+\label{s:prevalence}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figs/server_cloaking2.png}
+\caption{Simplified PHP code snippet of fingerprinting cloaking in a phishing kit, checking IP, Hostname, and User-Agent.}
+\label{fig:servercloaking}
+% \vspace{-10pt}
+\end{figure}
+
+To understand the prevalence of cloaking techniques used in advanced phishing kits, we manually inspect 56 phishing kits, and extract common patterns that implement fingerprinting cloaking techniques in phishing kits.
+
+The patterns include (1) sensitive file names such as ``antibot'', ``blocker'', and ``antirobot''; (2) blocked words, for example, an array containing crawler information such as ``google'', ``paypal'', or ``phishtank'' (e.g., \texttt{blocked\_words} in~\autoref{fig:servercloaking}); (3) IP checker that blocks visit from certain IP addresses, such as \texttt{bannedIP} in~\autoref{fig:servercloaking}; and (4) error header, returning an error status code and an error web page, such as \texttt{header} function in PHP.
+These attributes reflect the implementation of fingerprinting cloaking techniques in phishing kits.
+
+With these patterns, we can automatically inspect such evasion to evaluate its prevalence.
+Among the inspected kits in~\emph{phishunt.io}~\cite{phishunt} from January to June 2021, 198 of 236 contain cloaking techniques to fingerprint anti-phishing crawler visit through IP, Referrer, and/or User-Agent.
+To comprehensively measure the prevalence of server-side fingerprinting cloaking techniques in phishing kits,
+we also run our pattern finding script on Cisco's dataset that is contributed to Virus Total.
+In total, all of 2,421 phishing kits from Cisco's dataset contain such evasion.
+Among them, 1,983 of the advanced phishing kits contain User-Agent checker.
+% Preliminarily, 100 out of 100 phishing kits from Cisco's dataset contain such evasion.
+% , while only one implements server-side click-through cloaking.
+
+From this experiment,
+we show that phishers prefer to fingerprint visit through information in HTTP request to distinguish humans out of crawlers.
+And thanks to the fact, 
+% \spartacus 
+we can design a framework to evade phishing websites generated from such advanced phishing kits by triggering the cloaking techniques.

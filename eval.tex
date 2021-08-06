@@ -1,35 +1,14 @@
+
+
+
 \section{Evaluation}
 \label{s:eval}
 
 We implement \spartacus in terms of Chrome extension, which the anti-phishing ecosystem can leverage and spread trivially.
-and evaluate it from three perspectives, including effectiveness, user experience, and privacy.
-These three aspects demonstrate the feasibility of the \spartacus system because it can successfully evade advanced phishing websites, can negligibly introduce latencies to the users when visiting websites, and can protect privacy of the users.
+and evaluate it from three perspectives, including effectiveness, latency, and potential impact on benign websites.
+These three aspects demonstrate the feasibility of the \spartacus framework in practice because it can successfully evade advanced phishing websites, can negligibly introduce latency to the users when visiting websites, and can run in the backstage without causing errors on benign websites.
 
-\subsection{Prevalence of Fingerprinting Cloaking}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{figs/server_cloaking2.png}
-\caption{Simplified PHP code snippet of fingerprinting cloaking in a phishing kit, checking IP, Hostname, and User-Agent.}
-\label{fig:servercloaking}
-% \vspace{-10pt}
-\end{figure}
-
-To understand the prevalence of cloaking techniques used in advanced phishing kits, we manually inspect 56 phishing kits, and extract common patterns that implement fingerprinting cloaking techniques in phishing kits.
-
-The patterns include (1) sensitive file names such as ``antibot'', ``blocker'', and ``antirobot''; (2) blocked words, for example, an array containing crawler information such as ``google'', ``paypal'', or ``phishtank'' (e.g., \texttt{blocked\_words} in~\autoref{fig:servercloaking}); (3) IP checker that blocks visit from certain IP addresses, such as \texttt{bannedIP} in~\autoref{fig:servercloaking}; and (4) error header, returning an error status code and an error web page, such as \texttt{header} function in PHP.
-These attributes reflect the implementation of fingerprinting cloaking techniques in phishing kits.
-
-With these patterns, we can automatically inspect such evasion to evaluate its prevalence.
-Among the inspected kits in~\emph{phishunt.io}~\cite{phishunt} from January to June 2021, 198 of 236 contain cloaking techniques to fingerprint anti-phishing crawler visit through IP, Referrer, and/or User-Agent.
-To comprehensively measure the prevalence of server-side fingerprinting cloaking techniques in phishing kits,
-we also run our pattern finding script on Cisco's dataset that is contributed to Virus Total.
-Preliminarily, 100 out of 100 phishing kits from Cisco's dataset contain such evasion.
-% , while only one implements server-side click-through cloaking.
-
-From this experiment,
-we show that phishers prefer to fingerprint visit through information in HTTP request to distinguish humans out of crawlers.
-And thanks to the fact, \spartacus can evade phishing websites generated from such advanced phishing kits.
 
 
 % \subsection{Support From the Ecosystem}
@@ -100,67 +79,7 @@ Because the web page content returned through \spartacus's visit does not contai
 
 % \textcolor{blue}{eval result}
 
-\subsection{Support from Ecosystem}
 
-Note that there are 17.72\% URLs that \spartacus cannot evade.
-We hypothesize that these websites are basic phishing that do not contain cloaking techniques.
-The anti-phishing systems nowadays such as Google Safe Browsing and VirusTotal can timely detect and/or blacklist traditional phishing attacks.
-Therefore, they can handle the phishing websites that cannot be evaded by \spartacus.
-And hence, \spartacus with the support of the anti-phishing ecosystem can prevent all types of phishing.
-
-To verify our hypothesis, we evaluate the blacklist speed of current anti-phishing systems on the examined phishing URLs.
-Due to the deployment of this experiment, we did not submit all phishing URLs.
-Among 4,674 submitted phishing URLs that are not evaded by \spartacus, anti-phishing systems such as Google Safe Browsing and VirusTotal can blacklist 4,598 of them.
-% The median detection speed is 28 minutes.
-The rest 76, after our manual inspection, is found that they are falsely reported to APWG.
-The evaluation result verifies that the ecosystem currently can protect users from being trapped in basic phishing attacks.
-In contrast, we totally submitted 40,852 URLs that can be evaded by \spartacus.
-The result shows that 24,154 of them are not detected or blacklisted by the anti-phishing systems.
-% For URLs that can be detected, the median speed is 154 minutes, compared with that of 22 minutes for basic phishing websites.
-
-
-
-\autoref{fig:venn_support} overviews the ability of \spartacus and support from the anti-phishing ecosystem.
-% Among all 45,526 phishing URLs submitted to anti-phishing systems,
-% 21,296 of them can be detected or blacklisted.
-% Due to the imbalance of the amount between evaded and not evaded phishing URLs,
-% we scale the not evaded ones and conduct the analysis.
-% Although the ecosystem can detect or blacklist 21,296 (46.77\%) of the phishing URLs, 
-Within our dataset, advanced phishing websites have overwhelmed the basic ones, which is shown in~\autoref{fig:venn_support} as blue circle and red circle, respectively.
-However, the anti-phishing ecosystem can only detect 40.87\% of the submitted evaded phishing URLs.
-As a comparison, \spartacus can evade 89.73\% of submitted phishing URLs.
-% But the ecosystem can only detect or blacklist 46.77\% of them.
-For the rest that \spartacus cannot evade,
-the ecosystem can mostly handle the not-evaded phishing URLs as a complement of \spartacus.
-With \spartacus and the support from current anti-phishing systems, 
-both advanced and basic phishing websites can be evaded or detected.
-
-We visualize the detection speed of current anti-phishing systems in~\autoref{fig:evade_bl_time}.
-All submitted phishing websites that \spartacus cannot evade can be detected/blacklisted in two hours.
-50\% of these websites can be detected within 22 minutes.
-As a comparison, current anti-phishing systems do not perform well against phishing websites that can be evaded by \spartacus.
-The median detection time is 154 minutes, but it can take as long as 47.82 hours to detect the other half.
-It reflects the ability of the anti-phishing ecosystem against phishing websites: 
-for basic phishing websites, they can react and blacklist them timely;
-for advanced phishing, it takes a long time to detect, which can be exploited by phishers to lure victims.
-Therefore, \spartacus not only can protect users from advanced phishing websites during the golden hour~\cite{oest2020sunrise} left by the current anti-phishing ecosystem due to process time, but also can evade phishing content even if the ecosystem cannot detect.
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{figs/venn_eval_3.pdf}
-\caption{Venn Diagram describing the evasion from \spartacus and support from the anti-phishing ecosystem.}
-\label{fig:venn_support}
-% \vspace{-10pt}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{figs/evade_bl_time_total.pdf}
-\caption{CDF of Blacklist/Detection time of current anti-phishing systems against phishing URLs evaded and not evaded by \spartacus.}
-\label{fig:evade_bl_time}
-% \vspace{-10pt}
-\end{figure}
 
 
 \subsection{Efficiency and Latency}
@@ -171,20 +90,28 @@ However, the latencies \spartacus introduces can be negligible.
 Therefore, we conduct an experiment to measure the latency for the \spartacus system for the following three perspective, database query, profile mutation, and content inspection.
 We leverage \emph{exthouse}~\cite{exthouse}, which analyzes the impact of a browser extension on web performance, as our test bench.
 % We run exthouse with 1,000 phishing websites and 1,000 benign websites on two configurations of browsers, one with \spartacus, the other without, and compare the mean rendering time for each group of websites.
-It contains three major measurements:
+It contains five major measurements:
 (1) Time to Interactive (TTI): the time it takes for the page to become fully interactive with the extension; 
 (2) First Input Delay (FID $\Delta$): the time from when a user first interacts with the website to the time when the browser is actually able to begin processing event handlers in response to that interaction;
-and (3) Scripting Time (Scripting $\Delta$): the amount of time JavaScript execution in the extension.
+(3) Scripting Time (Scripting $\Delta$): the amount of time JavaScript execution in the extension;
+(4) Long Task (Added Long Task): this value represents a sum of Long Tasks added by extension;
+and (5) Extra CPU Consumption (Extra CPU Time): additional files in the extension need extra CPU consumption for each URL the browser visits.
 The lower these three factors are, the better the website performs with the tested extension.
 At last, \emph{exthouse} will score of the extension.
 A higher score reflects a better performance of the extension.
 
 \exthouse
 
-\autoref{tab:exthouse} illustrates the metrics of top 10 Chrome extensions~\cite{exthouse} along with \spartacus under the inspection of \emph{exthouse}.
-We test these extensions with 100 websites, including both benign and malicious, and average the metrics.
-\spartacus has a score of 100, 0 FID and scripting delta, and 800 ms of TTI.
-It means that with \spartacus, users can still interact with the website with minimum latency.
+\autoref{tab:exthouse} illustrates the metrics of top 10 Chrome extensions~\cite{exthouse} along with \spartacus when visiting benign and malicious websites under the inspection of \emph{exthouse}.
+We test these extensions with 100 websites, including half benign and half malicious, and take the average into the metrics.
+\spartacus has a score of 100, 20 ms FID, 0 scripting delta, and 800 ms of TTI when visiting benign websites.
+The metrics of \spartacus visiting malicious websites also outscores those of other popular extensions.
+Even though it takes long time to interact with the malicious website, it is still acceptable because \spartacus needs time to mutate the profile, which is still less than the time used consumed by other extensions.
+Take \texttt{Avira Browser Safety} (ABS) as an example, it is an extension warning users if the website is unsafe.
+However, it added long tasks and extra CPU time when visiting malicious websites.
+As a similar type, \spartacus does not harden the CPU as ABS does.
+At the same time, \spartacus can provide safe browsing for users.
+The evaluation result means that with \spartacus, users can still interact with the website with minimum latency.
 The inspection result shows that \spartacus out-scores popular Chrome extensions and does not impact the performance of websites, compared with other extensions.
 
 \subsection{Impact on Benign Website}
@@ -201,8 +128,9 @@ In Coarse-Grained experiment, we intend to evaluate if \spartacus system has neg
 So we visit 60,848 (9.66\%) out of 629,843 URLs in Alexa Top One Million Domain List~\cite{AlexaTop1M} in both default and \spartacus'ed browsers.
 We compare the web page screenshot and HTML similarity on the visited URLs.
 The result is shown in~\autoref{tab:coarsegrain}.
-Among them, 0.25\% (150) block the access from \spartacus'ed browser;
-0.20\% (124) have different layouts.
+After adopting~\Cref{alg:mutatelogic},
+0.06\% (39) have different layouts and 
+0.04\% (29) block the access from \spartacus'ed browser.
 
 \begin{figure}[t]
     \centering
@@ -262,47 +190,17 @@ They can normally interact with the websites with \spartacus providing phishing-
 % , which indicates that \spartacus does not make users perceive the difference, even if it has 
 
 
-To further differentiate between a legitimate anti-bot page and a phishing one that appears due to cloaking,
-we extract domain reputation~\cite{reputation}, registration duration~\cite{whois}, and top viewed sub-domains~\cite{topviewedsubdomains} of URLs from false-positive (FP) and true-positive (TP) sides.
-Cisco defines reputation of a domain as five categories: Trusted, Favorable, Neutral, Questionable, and Untrusted.
-We inspect 150 URLs on each side.
-Reputation-wise, 136 out of 150 TP URLs --- phishing --- have reputation lower or equal to Neutral level, the lowest of which is Poor Verdict.
-In contrast, 24 of 150 FP URLs reside lower than Favorable level, the lowest of which is Questionable (only one).
-In terms of domain lifespan, the mean value of domain duration since registration for FP URLs is 4,692 days and the median is 4,521 days.
-However, the average lifespan of the malicious domains is 1,618 days, with median of 900 days.
-Moreover, all 150 FP URLs fall into the top viewed sub-domains of the corresponding domain names, but none of the TP ones matches with them.
 
-From the evaluation result, we summarize that a legitimate domain has a higher reputation and longer life than a malicious one, and they are within top viewed sub-domains.
-With the finding, we can further reduce the FPs of \spartacus by querying the attributes of the domain to decide whether to mutate the HTTP profile.
-We choose the phishing domain duration that resides on 75\% in the list (1,501) and Neutral level as threshold.
-If one URL has a lifespan lower than 1,501 days and its reputation level is Neutral or worse, or its sub-domain is not top viewed, \spartacus will mutate the HTTP profile before request.
-The logic is shown in~\Cref{alg:mutatelogic}.
 
-\begin{algorithm}\captionsetup{labelfont={sc,bf}, labelsep=newline}
-  \caption{Logic of mutating HTTP profile}
-\begin{algorithmic}[1]
-
-\State $p_d = default\_profile$
-\State $u = url\_to\_visit$
-
-\If{\State $reputation(u)~\leq Neutral$ \texttt{and}
-\State $duration(u)~\geq 1,501$ \texttt{or} 
-\State $d.domain$ NOT in top reviewed sub-domains}
-    \State $p_n = mutate\_http\_profile(p_d)$
-\EndIf
-
-\State $send\_request(p_n)$
-
-\end{algorithmic}
-\label{alg:mutatelogic}
-\end{algorithm}
-
-We re-run the evaluation based on the threshold and find that 121 out of the 150 legitimate domains show same web page content on both default and \spartacus'ed browsers, as listed in~\autoref{tab:coarsegrain}.
+With applying~\Cref{alg:mutatelogic}, we evaluated \spartacus based on the threshold and find that 29 legitimate domains show different web page content on default and \spartacus'ed browsers, as listed in~\autoref{tab:coarsegrain}.
 Hence, only 0.04\% of 60,848 domains are falsely evaded.
-Additionally, 39 of the domains show different layouts between default and \spartacus browsers.
-As we discussed above, such difference will not affect the activities of normal users,
-but after applying~\Cref{alg:mutatelogic}, \spartacus and normal browsers perform more alike on benign domains.
-As comparison, all the phishing URLs can still be evaded through \spartacus because they all triggered the condition to invoke \emph{mutate\_http\_profile()}.
+It is because the 29 domains do not fall into the high reputation group of \spartacus's non-mutation criteria.
+As one possible mitigation, we provide a channel for users to report falsely evaded websites.
+Once receiving the report from the client side, we will conduct manual inspection and whitelist the false-positives.
+% Additionally, 39 of the domains show different layouts between default and \spartacus browsers.
+% As we discussed above, such difference will not affect the activities of normal users,
+% but after applying~\Cref{alg:mutatelogic}, \spartacus and normal browsers perform more alike on benign domains.
+As comparison, phishing URLs can still be evaded through \spartacus because they all triggered the condition to invoke \emph{mutate\_http\_profile()}.
 
 \subsubsection{Fine-Grained Experiment}
 
