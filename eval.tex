@@ -9,8 +9,8 @@ These three aspects demonstrate the feasibility of the \spartacus system because
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{figs/server_cloaking.png}
-\caption{PHP code snippet of fingerprinting cloaking in a phishing kit.}
+\includegraphics[width=\linewidth]{figs/server_cloaking2.png}
+\caption{Simplified PHP code snippet of fingerprinting cloaking in a phishing kit, checking IP, Hostname, and User-Agent.}
 \label{fig:servercloaking}
 % \vspace{-10pt}
 \end{figure}
@@ -66,10 +66,10 @@ And thanks to the fact, \spartacus can evade phishing websites generated from su
         \label{fig:sp2}
 	\end{subfigure}%
 	\quad
-	\vspace{-5pt}
+% 	\vspace{-5pt}
 	\caption{Web page contents from default and \spartacus'ed browser visits for a cloaked phishing website.}
 	\label{fig:effectiveness}
-	\vspace{-10pt}
+% 	\vspace{-10pt}
 \end{figure*}
 
 We evaluate the effectiveness of \spartacus by conducting an experiment where we visit same phishing websites with different configurations of automated browsers, one with default setting, the other with \spartacus to mutate the profile.
@@ -157,7 +157,7 @@ Therefore, \spartacus not only can protect users from advanced phishing websites
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{figs/evade_bl_time_total.pdf}
-\caption{CDF of Blacklist/Detection time of current anti-phishing systems against phishing URLs evaded by \spartacus}
+\caption{CDF of Blacklist/Detection time of current anti-phishing systems against phishing URLs evaded and not evaded by \spartacus.}
 \label{fig:evade_bl_time}
 % \vspace{-10pt}
 \end{figure}

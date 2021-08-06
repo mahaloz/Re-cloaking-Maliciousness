@@ -24,10 +24,10 @@ Otherwise, the front end will query the fingerprinting knowledgebase to see if w
 \subsection{Collection and Maintenance of Back End Databases}
 
 \noindent
-\textbf{Black- and whitelist database.}
+\textbf{Blacklist database.}
 Blacklist based anti-phishing systems such as Google Safe Browsing and Microsoft SmartScreen have been examining and collecting phishing URLs to warn users before they visit the websites.
 We collect known phishing URLs from common blacklists so that \spartacus can leverage the achievements from the anti-phishing systems to facilitate the web request process when dealing with known phishing websites.
-Similarly, we leverage a whitelist to avoid any impacts brought by \spartacus so that the users can visit legitimate websites with their own profiles.
+% Similarly, we leverage a whitelist to avoid any impacts brought by \spartacus so that the users can visit legitimate websites with their own profiles.
 
 \noindent
 \textbf{Fingerprinting Knowledgebase.}
@@ -41,11 +41,11 @@ The profiles of anti-phishing system crawlers are keeping updating all the time.
 Accordingly, phishers refresh their blacklist to precisely evade the access from the anti-phishing bots.
 Therefore, we crawl the up-to-date profiles of anti-phishing systems into the database and hence \spartacus can leverage them to visit suspicious websites and receive benign web page content.
 
-\noindent
-\textbf{Phishing Attribute Database.}
-After sending request with mutated profile and receiving respond from the server, \spartacus needs to classify whether maliciousness exists in the web page content.
-It implements the state-of-the-art phishing detections such as content-based and visual-similarity-based methodologies to extract phishing attributes based on the responded web page content such as screenshots and HTML source code.
-\spartacus compares such features with those from websites of most phishing-targeted organizations, which stores in the Phishing Attribute Datatbase.
+% \noindent
+% \textbf{Phishing Attribute Database.}
+% After sending request with mutated profile and receiving respond from the server, \spartacus needs to classify whether maliciousness exists in the web page content.
+% It implements the state-of-the-art phishing detections such as content-based and visual-similarity-based methodologies to extract phishing attributes based on the responded web page content such as screenshots and HTML source code.
+% \spartacus compares such features with those from websites of most phishing-targeted organizations, which stores in the Phishing Attribute Datatbase.
 
 
 \subsection{Decision Makers on A URL Visit}
@@ -59,9 +59,9 @@ We will elaborate them in order of the system flow.
 With the contribution of the anti-phishing ecosystem, \spartacus can filter known phishing URLs through the query to the Malicious URL BlackList Database.
 Any match in the blacklist database will result in a block access to the URL without further action.
 
-\noindent
-\textbf{Whitelist Filter.}
-Similar to the blacklist filter, the whitelist filter in \spartacus helps filter the whitelisted URLs so that the user can receive the web page content with best out-looking that the organization configures to fit in the visit from different browsers or devices.
+% \noindent
+% \textbf{Whitelist Filter.}
+% Similar to the blacklist filter, the whitelist filter in \spartacus helps filter the whitelisted URLs so that the user can receive the web page content with best out-looking that the organization configures to fit in the visit from different browsers or devices.
 
 \noindent
 \textbf{Knowledgebase Query.}
