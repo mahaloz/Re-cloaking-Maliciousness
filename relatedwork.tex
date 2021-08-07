@@ -5,12 +5,31 @@ They have proposed several methodologies to detect phishing attacks based on one
 Some work analyzes URL of a suspicious website based on the lexical features or URL ranking to determine the maliciousness of the site~\cite{blum2010lexical, le2011phishdef, khonji2012enhancing, feroz2015phishing}.
 Others collect web page content and detect phishing websites with textual and visual similarity features~\cite{zhang2007cantina, zhang2011textual, dunlop2010goldphish}.
 Combining with available features including both URL and web page content, researchers have developed blacklist based anti-phishing systems such as Google Safe Browsing~\cite{whittaker2010large} to protect Internet users from visiting suspicious websites.
-With the large-scale implementation of cloaking techniques in phishing attacks~\cite{oest2020sunrise, oest2020phishtime, oest2019phishfarm, oest2018inside}, researchers realize that the sophisticated phishing attacks are responsible for substantial portion of damage and that the whole ecosystem should prioritize on mitigating phishing with evasion techniques.
-Therefore, analysis and detection of server-side~\cite{wang2011cloak, invernizzi2016cloak} and client-side~\cite{zhang2021crawlphish} cloaking techniques have been proposed to fight against such sophistications.
+All the proposed methodologies in the past, however, have a limitation that they are detection systems, and require certain features to classify the maliciousness,
+which takes long time to output and hence leaves phishers golden hour to harvest.
 
-All the proposed methodologies, however, have a limitation that they only provide a pain-relief pills to certain symptoms of phishing attacks, such as suspicious URL, similar layout as the impersonated website, and cloaking techniques.
-Furthermore, as phishers have been developing advanced cloaking techniques, it becomes more and more difficult to retrieve phishing content, which most anti-phishing systems depend on.
+With the large-scale implementation of cloaking techniques in phishing attacks~\cite{oest2020sunrise, oest2020phishtime, oest2019phishfarm, oest2018inside}, researchers realize that the sophisticated phishing attacks are responsible for substantial portion of damage and that the whole ecosystem should prioritize on mitigating phishing with evasion techniques.
+The cloaking techniques make the path of anti-phishing tougher for the proposed methodologies because it becomes more and more difficult to retrieve phishing content, which most anti-phishing systems depend on.
 With very limited amount of features of a suspicious website, the system cannot determine precisely the maliciousness.
-Therefore, with the contribution of previous studies on phishing symptoms, our work provides a vaccine to neutralizing advanced phishing-virus.
-Our system is also extendable and always up-to-date by adding fingerprints that researchers will find in the future.
+
+Therefore, analysis and detection of server-side
+% ~\cite{wang2011cloak, invernizzi2016cloak} 
+and client-side
+% 
+cloaking techniques have been proposed to fight against such sophistications.
+For client-side cloaking techniques, Zhang et al.~\cite{zhang2021crawlphish} proposed CrawlPhish to force-execute JavaScript snippets in the payload to reveal malicious content.
+As for server-side cloaking in phishing, previous work~\cite{wang2011cloak, invernizzi2016cloak, oest2018inside} can only categorize types of server-side cloaking through analysis of compromised phishing kits.
+The whole security community does not have an efficient and effective methodology to mitigate them.
+Phishers can always evolve to add new crawler-looking features in the phishing kits to block any suspicious visit.
+
+
+% All the proposed methodologies, however, have a limitation that they only provide a pain-relief pills to certain symptoms of phishing attacks, such as suspicious URL, similar layout as the impersonated website, and cloaking techniques.
+
+% Furthermore, as phishers have been developing advanced cloaking techniques, it becomes more and more difficult to retrieve phishing content, which most anti-phishing systems depend on.
+
+% Therefore, with the contribution of previous studies on phishing symptoms, 
+Considering the nature and prevalence of cloaked phishing websites~\cite{oest2018inside, oest2019phishfarm},
+our work provides a vaccine to neutralizing advanced phishing-virus.
+Rather than trying best to bypass cloaking techniques in phishing websites, \spartacus deliberately triggers them and hence retrieve benign content to show to users.
+Our framework is also extendable and always up-to-date by adding fingerprints that researchers will find in the future.
 
