@@ -15,7 +15,7 @@ The patterns include (1) sensitive file names such as ``antibot'', ``blocker'', 
 These attributes reflect the implementation of fingerprinting cloaking techniques in phishing kits.
 
 With these patterns, we can automatically inspect such evasion to evaluate its prevalence.
-Among the inspected kits in~\emph{phishunt.io}~\cite{phishunt} from January to June 2021, 198 of 236 contain cloaking techniques to fingerprint anti-phishing crawler visit through IP, Referrer, and/or User-Agent.
+Among the inspected kits in~\emph{phishunt.io}~\cite{phishunt} from May 2020 to July 2021, \fpphishingkit of \totalphishingkit contain cloaking techniques to fingerprint anti-phishing crawler visit through IP, Referrer, or User-Agent.
 To comprehensively measure the prevalence of server-side fingerprinting cloaking techniques in phishing kits,
 we also run our pattern finding script on Cisco's dataset that is contributed to Virus Total.
 In total, all of 2,421 phishing kits from Cisco's dataset contain such evasion.
@@ -28,3 +28,18 @@ we show that phishers prefer to fingerprint visit through information in HTTP re
 And thanks to the fact, 
 % \spartacus 
 we can design a framework to evade phishing websites generated from such advanced phishing kits by triggering the cloaking techniques.
+
+\topsenswords
+
+\noindent
+\textbf{Popular fingerprinting words.}
+To understand the popularity of sensitive words such as ``bot'' and ``googlebot'' that phishing kits use to evade crawler visit,
+we collect \numsenswords words in the User-Agent checker of phishing kits and automatically count the appearance of each word in the examined phishing kits.
+\autoref{tab:topsenswords} displays the top 10 used sensitive words in the examined phishing kits.
+Note that the frequency of some of these words is over the number of phishing kits.
+It is because one phishing kits can contain multiple rules to block visit using these words.
+Among all the inspected sensitive words, \texttt{bot} has the most appearance.
+The result shows that phishers involve those words into the phishing kits to evade visits, whose profile contains any of the words,
+A request that contains ``bot'' or ``curl'' is highly likely to be from an automated anti-phishing system.
+Potential victim's profile, on the other hand, does not have these words involved.
+With the most frequently blocked words in phishing kits, we can use them and trivially trigger the fingerprinting cloaking techniques in sophisticated phishing websites.

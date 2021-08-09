@@ -15,7 +15,8 @@ To this end, we design, implement, and evaluate~\spartacus, a framework that aut
 \subsection{Overview}
 \autoref{fig:sp_arch} demonstrates the architecture of the \spartacus system.
 The whole system consists of two parts, \emph{front end} and \emph{back end}. 
-The front end is responsible for filtering whitelisted or blacklisted URLs and mutating profiles in the HTTP request such as user agent. 
+The front end is responsible for filtering already blacklisted URLs and mutating profiles in the HTTP request such as user agent.
+\spartacus also checks the information of benign websites to decide whether to mutate the profile.
 In the back end, we maintain several databases to provide support to the front end, including black and whitelist database, which is used to process known URLs, fingerprinting knowledge base, which stores the successful mutation, the anti-phishing bot profile database, which contains the profiles of anti-phishing systems such as google bot, phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
 
 When a user tries to visit a URL, first the URL goes to black and whitelist. 
@@ -48,6 +49,46 @@ Therefore, we crawl the up-to-date profiles of anti-phishing systems into the da
 % It implements the state-of-the-art phishing detections such as content-based and visual-similarity-based methodologies to extract phishing attributes based on the responded web page content such as screenshots and HTML source code.
 % \spartacus compares such features with those from websites of most phishing-targeted organizations, which stores in the Phishing Attribute Datatbase.
 
+
+\subsection{Benign Domain Handling}
+
+We preliminarily tested how \spartacus works on benign websites to figure out the optimal methodology that can bring negligible impact on them.
+Among 60,848 benign websites that \spartacus visited, 150 of them blocked the access from a browser with \spartacus.
+To make benign websites allow the visit with \spartacus while keeping its evasion ability against advanced phishing websites,
+% To further differentiate between a legitimate anti-bot page and a phishing one that appears due to cloaking,
+we extract domain reputation~\cite{reputation}, registration duration~\cite{whois}, and top viewed sub-domains~\cite{topviewedsubdomains} of URLs from false-positive (FP) and true-positive (TP) sides.
+Cisco defines reputation of a domain as five categories: Trusted, Favorable, Neutral, Questionable, and Untrusted.
+We inspect 150 URLs on each side.
+Reputation-wise, 136 out of 150 TP URLs --- phishing --- have reputation lower or equal to Neutral level, the lowest of which is Poor Verdict.
+In contrast, 24 of 150 FP URLs reside lower than Favorable level, the lowest of which is Questionable (only one).
+In terms of domain lifespan, the mean value of domain duration since registration for FP URLs is 4,692 days and the median is 4,521 days.
+However, the average lifespan of the malicious domains is 1,618 days, with median of 900 days.
+Moreover, all 150 FP URLs fall into the top viewed sub-domains of the corresponding domain names, but none of the TP ones matches with them.
+
+From the evaluation result, we summarize that a legitimate domain has a higher reputation and longer life than a malicious one, and they are within top viewed sub-domains.
+With the finding, we can further reduce the FPs of \spartacus by querying the attributes of the domain to decide whether to mutate the HTTP profile.
+We choose the phishing domain duration that resides on 75\% in the list (1,501) and Neutral level as threshold.
+If one URL has a lifespan lower than 1,501 days and its reputation level is Neutral or worse, or its sub-domain is not top viewed, \spartacus will mutate the HTTP profile before request.
+The logic is shown in~\Cref{alg:mutatelogic}.
+
+\begin{algorithm}\captionsetup{labelfont={sc,bf}, labelsep=newline}
+  \caption{Logic of mutating HTTP profile}
+\begin{algorithmic}[1]
+
+\State $p_d = default\_profile$
+\State $u = url\_to\_visit$
+
+\If{\State $reputation(u)~\leq Neutral$ \texttt{and}
+\State $duration(u)~\geq 1,501$ \texttt{or} 
+\State $d.domain$ NOT in top reviewed sub-domains}
+    \State $p_n = mutate\_http\_profile(p_d)$
+\EndIf
+
+\State $send\_request(p_n)$
+
+\end{algorithmic}
+\label{alg:mutatelogic}
+\end{algorithm}
 
 
 \subsection{Decision Makers on A URL Visit}
@@ -94,7 +135,9 @@ Additionally, it set the Referer to either None or ``www.google.com'' to further
 % 407 sensitive words
 
 
-\subsubsection{Maliciousness Classification.}
+% \subsubsection{Maliciousness Classification.}
+\noindent
+\textbf{Maliciousness Classification.}
 After submitting the web request to the server, \spartacus along with the browser will receive a response from the server.
 There are different situations of the response as follows:
 
@@ -117,45 +160,7 @@ Before \spartacus figures out the cloaking technique, it implements visual-simil
 % otherwise, the browser user will see a benign web page content.
 
 
-\subsection{Benign Domain Handling}
 
-We preliminarily tested how \spartacus works on benign websites to figure out the optimal methodology that can bring negligible impact on them.
-Among 60,848 benign websites that \spartacus visited, 150 of them blocked the access from a browser with \spartacus.
-To make benign websites allow the visit with \spartacus while keeping its evasion ability against advanced phishing websites,
-% To further differentiate between a legitimate anti-bot page and a phishing one that appears due to cloaking,
-we extract domain reputation~\cite{reputation}, registration duration~\cite{whois}, and top viewed sub-domains~\cite{topviewedsubdomains} of URLs from false-positive (FP) and true-positive (TP) sides.
-Cisco defines reputation of a domain as five categories: Trusted, Favorable, Neutral, Questionable, and Untrusted.
-We inspect 150 URLs on each side.
-Reputation-wise, 136 out of 150 TP URLs --- phishing --- have reputation lower or equal to Neutral level, the lowest of which is Poor Verdict.
-In contrast, 24 of 150 FP URLs reside lower than Favorable level, the lowest of which is Questionable (only one).
-In terms of domain lifespan, the mean value of domain duration since registration for FP URLs is 4,692 days and the median is 4,521 days.
-However, the average lifespan of the malicious domains is 1,618 days, with median of 900 days.
-Moreover, all 150 FP URLs fall into the top viewed sub-domains of the corresponding domain names, but none of the TP ones matches with them.
-
-From the evaluation result, we summarize that a legitimate domain has a higher reputation and longer life than a malicious one, and they are within top viewed sub-domains.
-With the finding, we can further reduce the FPs of \spartacus by querying the attributes of the domain to decide whether to mutate the HTTP profile.
-We choose the phishing domain duration that resides on 75\% in the list (1,501) and Neutral level as threshold.
-If one URL has a lifespan lower than 1,501 days and its reputation level is Neutral or worse, or its sub-domain is not top viewed, \spartacus will mutate the HTTP profile before request.
-The logic is shown in~\Cref{alg:mutatelogic}.
-
-\begin{algorithm}\captionsetup{labelfont={sc,bf}, labelsep=newline}
-  \caption{Logic of mutating HTTP profile}
-\begin{algorithmic}[1]
-
-\State $p_d = default\_profile$
-\State $u = url\_to\_visit$
-
-\If{\State $reputation(u)~\leq Neutral$ \texttt{and}
-\State $duration(u)~\geq 1,501$ \texttt{or} 
-\State $d.domain$ NOT in top reviewed sub-domains}
-    \State $p_n = mutate\_http\_profile(p_d)$
-\EndIf
-
-\State $send\_request(p_n)$
-
-\end{algorithmic}
-\label{alg:mutatelogic}
-\end{algorithm}
 
 
 

@@ -3,13 +3,16 @@ Phishers implement cloaking techniques to evade detection from anti-phishing sys
 The anti-phishing ecosystem has been devoting to reveal real phishing content behind cloaks.
 However, it has few progress because phishers can always enrich their fingerprinting database by adding new rules to distinguish traffics from the ecosystem and hence evade the visit.
 
-According to the situation where cloaking techniques are widely implemented in phishing attacks and the goal of anti-phishing is to prevent Internet users to see phishing contents, we consider the security problem from a different perspective: instead of trying best to reveal phishing content, we can leverage the cloaking techniques in phishing to prevent users to see phishing content. In this work, we propose \emph{Spartacus}, a framework that disguise Internet users as anti-phishing crawlers to request web page content of a suspicious URL, while remain users' own profiles on visiting benign websites.
+We first examine 2,933 phishing kits automatically and verify that fingerprinting cloaking techniques are very prevalently used in advanced phishing websites.
+According to the situation where cloaking techniques are widely implemented in phishing attacks and the goal of anti-phishing is to prevent Internet users to see phishing contents, we consider the security problem from a different perspective:
+instead of trying best to reveal phishing content, we can leverage the cloaking techniques in phishing to prevent users to see phishing content.
+In this work, we propose \emph{Spartacus}, a framework that disguises Internet users as anti-phishing crawlers to request web page content of a suspicious URL, while has negligible impact on visiting benign websites.
 
 
-We examine 2,657 phishing kits automatically and verify that fingerprinting cloaking techniques are very prevalently used in advanced phishing websites.
+
 We deploy \spartacus over nine months between November 2020 and July 2021 to evaluate the effectiveness of our system by visiting 160,728 reported phishing URLs in the wild.
 132,247 of them do not return malicious content to \spartacus.
-We also evaluate the current anti-phishing systems and summarize that systems such as Google Safe Browsing and VirusTotal can timely detect and blacklist the rest 17.72\% phishing URLs.
+We also evaluate the current anti-phishing systems and summarize that systems such as Google Safe Browsing and VirusTotal can detect and blacklist the rest 17.72\% phishing URLs.
 However, those systems are not as efficient and effective as they are against phishing URLs that can be evaded by \spartacus,
 which demonstrates the importance of the proposal of \spartacus.
 
