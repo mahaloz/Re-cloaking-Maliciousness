@@ -19,38 +19,15 @@ The front end is responsible for filtering already blacklisted URLs and mutating
 \spartacus also checks the information of benign websites to decide whether to mutate the profile.
 In the back end, we maintain several databases to provide support to the front end, including black and whitelist database, which is used to process known URLs, fingerprinting knowledge base, which stores the successful mutation, the anti-phishing bot profile database, which contains the profiles of anti-phishing systems such as google bot, phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
 
-When a user tries to visit a URL, first the URL goes to black and whitelist. 
-If the existing record is found, the browser will either block the access or keep user's original profile when requesting the server. 
+When a user tries to visit a URL, first the URL goes to blacklist and \spartacus queries its domain information.
+If the existing record is found in the blacklist, the browser will block the access. 
+If \spartacus decides the URL to be benign based on the domain information, it will keep user's original profile when requesting the server. 
 Otherwise, the front end will query the fingerprinting knowledgebase to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the “spartacus” profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness. If yes, the browser will show a warning sign to the user, or the web page content will be shown to the user. The knowledge base will be updated accordingly under both situations. 
-
-\subsection{Collection and Maintenance of Back End Databases}
-
-\noindent
-\textbf{Blacklist database.}
-Blacklist based anti-phishing systems such as Google Safe Browsing and Microsoft SmartScreen have been examining and collecting phishing URLs to warn users before they visit the websites.
-We collect known phishing URLs from common blacklists so that \spartacus can leverage the achievements from the anti-phishing systems to facilitate the web request process when dealing with known phishing websites.
-% Similarly, we leverage a whitelist to avoid any impacts brought by \spartacus so that the users can visit legitimate websites with their own profiles.
-
-\noindent
-\textbf{Fingerprinting Knowledgebase.}
-The fingerprinting knowledgebase is shared among users who leverage \spartacus and stores profiles with which users cannot see malicious content when requesting the server.
-After the maliciousness classification, if phishing content is not found in the responded source, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the knowledgebase.
-When other users try to visit the same URL, \spartacus will use the corresponding profile recorded in the database to guarantee that users do not receive malicious content.
-
-\noindent
-\textbf{Anti-phishing Bot Profile Database.}
-The profiles of anti-phishing system crawlers are keeping updating all the time.
-Accordingly, phishers refresh their blacklist to precisely evade the access from the anti-phishing bots.
-Therefore, we crawl the up-to-date profiles of anti-phishing systems into the database and hence \spartacus can leverage them to visit suspicious websites and receive benign web page content.
-
-% \noindent
-% \textbf{Phishing Attribute Database.}
-% After sending request with mutated profile and receiving respond from the server, \spartacus needs to classify whether maliciousness exists in the web page content.
-% It implements the state-of-the-art phishing detections such as content-based and visual-similarity-based methodologies to extract phishing attributes based on the responded web page content such as screenshots and HTML source code.
-% \spartacus compares such features with those from websites of most phishing-targeted organizations, which stores in the Phishing Attribute Datatbase.
 
 
 \subsection{Benign Domain Handling}
+\label{ss:benignalg}
+
 
 We preliminarily tested how \spartacus works on benign websites to figure out the optimal methodology that can bring negligible impact on them.
 Among 60,848 benign websites that \spartacus visited, 150 of them blocked the access from a browser with \spartacus.
@@ -89,6 +66,51 @@ The logic is shown in~\Cref{alg:mutatelogic}.
 \end{algorithmic}
 \label{alg:mutatelogic}
 \end{algorithm}
+
+
+
+\subsection{Collection and Maintenance of Back End Databases}
+
+\noindent
+\textbf{Not-mutated Databse.}
+As discussed in~\Cref{ss:benignalg}, to minimize the potential impact on benign website visit,
+\spartacus needs to query the reputation, domain age, and popular subdomains for each domain the user tries to visit.
+To further reduce the latency where \spartacus has to send requests to the reputation lookup database externally and waits for the response,
+we beforehand cache the information of top 1,000 domains in Alexa Top One Million List~\cite{AlexaTop1M} into \spartacus's backend.
+In this way, the information of top visited websites \spartacus needs can be acquired quickly.
+
+
+\begin{comment}
+
+\noindent
+\textbf{Blacklist database.}
+Blacklist based anti-phishing systems such as Google Safe Browsing and Microsoft SmartScreen have been examining and collecting phishing URLs to warn users before they visit the websites.
+We collect known phishing URLs from common blacklists so that \spartacus can leverage the achievements from the anti-phishing systems to facilitate the web request process when dealing with known phishing websites.
+% Similarly, we leverage a whitelist to avoid any impacts brought by \spartacus so that the users can visit legitimate websites with their own profiles.
+
+\end{comment}
+
+
+\noindent
+\textbf{Fingerprinting Knowledgebase.}
+The fingerprinting knowledgebase is shared among users who leverage \spartacus and stores profiles with which users cannot see malicious content when requesting the server.
+After the maliciousness classification, if phishing content is not found in the responded source, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the knowledgebase.
+When other users try to visit the same URL, \spartacus will use the corresponding profile recorded in the database to guarantee that users do not receive malicious content.
+
+\noindent
+\textbf{Anti-phishing Bot Profile Database.}
+The profiles of anti-phishing system crawlers are keeping updating all the time.
+Accordingly, phishers refresh their blacklist to precisely evade the access from the anti-phishing bots.
+Therefore, we crawl the up-to-date profiles of anti-phishing systems into the database and hence \spartacus can leverage them to visit suspicious websites and receive benign web page content.
+
+% \noindent
+% \textbf{Phishing Attribute Database.}
+% After sending request with mutated profile and receiving respond from the server, \spartacus needs to classify whether maliciousness exists in the web page content.
+% It implements the state-of-the-art phishing detections such as content-based and visual-similarity-based methodologies to extract phishing attributes based on the responded web page content such as screenshots and HTML source code.
+% \spartacus compares such features with those from websites of most phishing-targeted organizations, which stores in the Phishing Attribute Datatbase.
+
+
+
 
 
 \subsection{Decision Makers on A URL Visit}
