@@ -1,20 +1,20 @@
 Phishing has been the top online attack nowadays.
-Phishers implement cloaking techniques to evade detection from anti-phishing systems by checking profiles from HTTP requests in server side as well as from browsers in client side.
-The anti-phishing ecosystem has been devoting to reveal real phishing content behind cloaks.
-However, it has few progress because phishers can always enrich their fingerprinting database by adding new rules to distinguish traffics from the ecosystem and hence evade the visit.
+Phishers implement cloaking techniques to evade detection from anti-phishing systems by checking profiles from HTTP requests in server-side as well as from browsers in client-side.
+The anti-phishing ecosystem has devoted to reveal real phishing content behind cloaks.
+However, it has little progress because phishers can always update their fingerprinting database by adding new rules to distinguish traffics from the ecosystem and hence evade the visit.
 
 We first examine 2,933 phishing kits automatically and verify that fingerprinting cloaking techniques are very prevalently used in advanced phishing websites.
 According to the situation where cloaking techniques are widely implemented in phishing attacks and the goal of anti-phishing is to prevent Internet users to see phishing contents, we consider the security problem from a different perspective:
-instead of trying best to reveal phishing content, we can leverage the cloaking techniques in phishing to prevent users to see phishing content.
-In this work, we propose \emph{Spartacus}, a framework that disguises Internet users as anti-phishing crawlers to request web page content of a suspicious URL, while has negligible impact on visiting benign websites.
+instead of trying best to reveal phishing content covered by cloaking techniques, we can leverage the cloaking techniques in phishing to prevent users to see phishing content.
+In this work, we propose~\spartacus, a framework that disguises Internet users as anti-phishing crawlers to request web page content of a suspicious URL from the client-side, while has negligible impact on visiting benign websites.
 
 
 
 We deploy \spartacus over nine months between November 2020 and July 2021 to evaluate the effectiveness of our system by visiting \totalphishing reported phishing URLs in the wild.
 \evadedphishing of them do not return malicious content to \spartacus.
-We also evaluate the current anti-phishing systems and summarize that systems such as Google Safe Browsing and VirusTotal can detect and blacklist the rest 17.72\% phishing URLs.
-However, those systems are not as efficient and effective as they are against phishing URLs that can be evaded by \spartacus,
-which demonstrates the importance of the proposal of \spartacus.
+We also evaluate the current anti-phishing systems and summarize that systems such as Google Safe Browsing and VirusTotal can detect and blacklist most of the rest 17.72\% phishing URLs.
+However, these systems are not as efficient and effective as they are against phishing URLs that can be evaded by \spartacus,
+which demonstrates the importance of the proposal of our framework.
 
 By visiting benign websites using \spartacus as a browser extension, we use both automated analysis and in-depth manual testing to show that the framework we design does not impact negatively on users' browsing activities, while protecting them from seeing advanced phishing websites.
 Therefore, we propose ways in which our methodology can be used to not only improve the ecosystem’s ability to timely evade phishing websites with server-side cloaking, but also trap phishers into a dilemma where they cannot differentiate visits of potential victims from those of anti-phishing crawlers.
