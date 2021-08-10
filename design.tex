@@ -52,16 +52,16 @@ The logic is shown in~\Cref{alg:mutatelogic}.
   \caption{Logic of mutating HTTP profile}
 \begin{algorithmic}[1]
 
-\State $p_d = default\_profile$
+\State $p = default\_profile$
 \State $u = url\_to\_visit$
 
 \If{\State $reputation(u)~\leq Neutral$ \texttt{and}
 \State $duration(u)~\geq 1,501$ \texttt{or} 
 \State $d.domain$ NOT in top reviewed sub-domains}
-    \State $p_n = mutate\_http\_profile(p_d)$
+    \State $p = mutate\_http\_profile(p)$
 \EndIf
 
-\State $send\_request(p_n)$
+\State $send\_request(p)$
 
 \end{algorithmic}
 \label{alg:mutatelogic}
@@ -72,7 +72,7 @@ The logic is shown in~\Cref{alg:mutatelogic}.
 \subsection{Collection and Maintenance of Back End Databases}
 
 \noindent
-\textbf{Not-mutated Databse.}
+\textbf{Domain Information Database.}
 As discussed in~\Cref{ss:benignalg}, to minimize the potential impact on benign website visit,
 \spartacus needs to query the reputation, domain age, and popular subdomains for each domain the user tries to visit.
 To further reduce the latency where \spartacus has to send requests to the reputation lookup database externally and waits for the response,
