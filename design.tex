@@ -13,16 +13,24 @@ To this end, we design, implement, and evaluate~\spartacus, a framework that aut
 \end{figure*}
 
 \subsection{Overview}
-\autoref{fig:sp_arch} demonstrates the architecture of the \spartacus system.
-The whole system consists of two parts, \emph{front end} and \emph{back end}. 
-The front end is responsible for filtering already blacklisted URLs and mutating profiles in the HTTP request such as user agent.
+\autoref{fig:sp_arch} demonstrates the architecture of the \spartacus framework.
+The whole framework consists of two parts, \emph{front end} and \emph{back end}. 
+The front end is responsible for the functionality performance, such as filtering already blacklisted URLs ,deciding whether to mutate, and mutating profiles in the HTTP request such as user agent.
 \spartacus also checks the information of benign websites to decide whether to mutate the profile.
-In the back end, we maintain several databases to provide support to the front end, including black and whitelist database, which is used to process known URLs, fingerprinting knowledge base, which stores the successful mutation, the anti-phishing bot profile database, which contains the profiles of anti-phishing systems such as google bot, phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
+In the back end, we maintain several databases to provide support to the front end.
+It includes (1) Domain Information Database, which is used to process known URLs; 
+(2) Fingerprinting Knowledgebase, which stores the successful mutation;
+and (3) Anti-phishing Bot Profile Database, which contains the patterns that advanced phishing websites identify as crawlers.
+% phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
 
-When a user tries to visit a URL, first the URL goes to blacklist and \spartacus queries its domain information.
-If the existing record is found in the blacklist, the browser will block the access. 
+When a user tries to visit a URL, first the URL goes to blacklist maintained by current anti-phishing systems and \spartacus queries its domain information.
+If the existing record is found in the blacklist, the framework will block the access. 
 If \spartacus decides the URL to be benign based on the domain information, it will keep user's original profile when requesting the server. 
-Otherwise, the front end will query the fingerprinting knowledgebase to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the “spartacus” profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness. If yes, the browser will show a warning sign to the user, or the web page content will be shown to the user. The knowledge base will be updated accordingly under both situations. 
+Otherwise, the front end will query the fingerprinting knowledgebase to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the \spartacus'ed profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness.
+The classification methodology is outside of \spartacus and the purpose is to verify the effectiveness of the mutated profile.
+% If yes, the browser will show a warning sign to the user, or the web page content will be shown to the user. 
+The knowledgebase will be updated accordingly with the used profile and classification result.
+% under both situations. 
 
 
 \subsection{Benign Domain Handling}
@@ -30,21 +38,23 @@ Otherwise, the front end will query the fingerprinting knowledgebase to see if w
 
 
 We preliminarily tested how \spartacus works on benign websites to figure out the optimal methodology that can bring negligible impact on them.
-Among 60,848 benign websites that \spartacus visited, 150 of them blocked the access from a browser with \spartacus.
-To make benign websites allow the visit with \spartacus while keeping its evasion ability against advanced phishing websites,
+% Among 60,848 benign websites that \spartacus visited, 150 of them blocked the access from a browser with \spartacus, as false-positives.
+% \spartacus also visited 150 cloaked phishing websites, as true-positives.
+% To make benign websites allow the visit with \spartacus while keeping its evasion ability against advanced phishing websites,
 % To further differentiate between a legitimate anti-bot page and a phishing one that appears due to cloaking,
-we extract domain reputation~\cite{reputation}, registration duration~\cite{whois}, and top viewed sub-domains~\cite{topviewedsubdomains} of URLs from false-positive (FP) and true-positive (TP) sides.
+To further differentiate benign and phishing websites,
+we extract domain reputation~\cite{reputation}, domain age~\cite{whois}, and top viewed sub-domains~\cite{topviewedsubdomains} of URLs from benign and malicious websites.
 Cisco defines reputation of a domain as five categories: Trusted, Favorable, Neutral, Questionable, and Untrusted.
-We inspect 150 URLs on each side.
-Reputation-wise, 136 out of 150 TP URLs --- phishing --- have reputation lower or equal to Neutral level, the lowest of which is Poor Verdict.
-In contrast, 24 of 150 FP URLs reside lower than Favorable level, the lowest of which is Questionable (only one).
-In terms of domain lifespan, the mean value of domain duration since registration for FP URLs is 4,692 days and the median is 4,521 days.
+We randomly select and inspect 150 URLs on each side.
+Reputation-wise, 136 out of 150 phishing URLs have reputation lower or equal to Neutral level, the lowest of which is Untrusted Verdict.
+In contrast, only 24 of 150 benign URLs reside lower than Favorable level, the lowest of which is Questionable (only one).
+In terms of domain lifespan, the mean value of domain duration since registration for benign URLs is 4,692 days and the median is 4,521 days.
 However, the average lifespan of the malicious domains is 1,618 days, with median of 900 days.
-Moreover, all 150 FP URLs fall into the top viewed sub-domains of the corresponding domain names, but none of the TP ones matches with them.
+Moreover, all 150 benign URLs fall into the top viewed sub-domains of the corresponding domain names, but none of the phishing ones matches with them.
 
-From the evaluation result, we summarize that a legitimate domain has a higher reputation and longer life than a malicious one, and they are within top viewed sub-domains.
-With the finding, we can further reduce the FPs of \spartacus by querying the attributes of the domain to decide whether to mutate the HTTP profile.
-We choose the phishing domain duration that resides on 75\% in the list (1,501) and Neutral level as threshold.
+From the analysis result, we summarize that a legitimate domain has a higher reputation and longer life than a malicious one, and they are within top viewed sub-domains.
+With the finding, we can further reduce the possibility of falsely evading benign websites for \spartacus by querying the attributes of the domain to decide whether to mutate the HTTP profile.
+We choose the phishing domain age that resides on 75\% in the list (1,501) and Neutral level as threshold.
 If one URL has a lifespan lower than 1,501 days and its reputation level is Neutral or worse, or its sub-domain is not top viewed, \spartacus will mutate the HTTP profile before request.
 The logic is shown in~\Cref{alg:mutatelogic}.
 
@@ -69,7 +79,9 @@ The logic is shown in~\Cref{alg:mutatelogic}.
 
 
 
-\subsection{Collection and Maintenance of Back End Databases}
+\subsection{Back End Databases}
+
+In the back end of \spartacus framework, we maintain three databases to facilitate the functionalities performed in the front end.
 
 \noindent
 \textbf{Domain Information Database.}
@@ -94,14 +106,14 @@ We collect known phishing URLs from common blacklists so that \spartacus can lev
 \noindent
 \textbf{Fingerprinting Knowledgebase.}
 The fingerprinting knowledgebase is shared among users who leverage \spartacus and stores profiles with which users cannot see malicious content when requesting the server.
-After the maliciousness classification, if phishing content is not found in the responded source, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the knowledgebase.
+After the maliciousness classification, if phishing content is not found in the responded content, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the knowledgebase.
 When other users try to visit the same URL, \spartacus will use the corresponding profile recorded in the database to guarantee that users do not receive malicious content.
 
 \noindent
 \textbf{Anti-phishing Bot Profile Database.}
-The profiles of anti-phishing system crawlers are keeping updating all the time.
+The profiles of anti-phishing system crawlers keep updating all the time.
 Accordingly, phishers refresh their blacklist to precisely evade the access from the anti-phishing bots.
-Therefore, we crawl the up-to-date profiles of anti-phishing systems into the database and hence \spartacus can leverage them to visit suspicious websites and receive benign web page content.
+Therefore, we crawl the up-to-date patterns of anti-phishing systems and blocked word list from retrieved phishing kits into the database and hence \spartacus can leverage newest patterns to visit suspicious websites and receive benign web page content by triggering the cloaking techniques.
 
 % \noindent
 % \textbf{Phishing Attribute Database.}
@@ -120,9 +132,10 @@ The decision makers consist of Blacklist Filter, Whitelist Filter, Knowledgebase
 We will elaborate them in order of the system flow.
 
 \noindent
-\textbf{Blacklist Filter.}
+\textbf{Blacklist \& Whitlist Filter.}
 With the contribution of the anti-phishing ecosystem, \spartacus can filter known phishing URLs through the query to the Malicious URL BlackList Database.
 Any match in the blacklist database will result in a block access to the URL without further action.
+Additionally, as discussed in~\Cref{ss:benignalg}, to minimize the impact on benign domains, \spartacus does not mutate the profile if it decides that the URL is benign based on the domain information.
 
 % \noindent
 % \textbf{Whitelist Filter.}
@@ -132,7 +145,7 @@ Any match in the blacklist database will result in a block access to the URL wit
 \textbf{Knowledgebase Query.}
 When the URL does not fall into either Blacklist or Whitelist filter, \spartacus will examine whether such URL has been visited once by either the user or other users by querying the Fingerprinting Knowledgebase.
 If a record is found in the knowledgebase, \spartacus will mutate the web request profile according to the record to make sure that such web request profile will return a benign web page content;
-otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which randomly selects one profile from Anti-phishing Bot Profile Database to submit the web request and lowers the impact to possible web page layout to the lowest.
+otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which selects one profile from Anti-phishing Bot Profile Database to submit the web request and lowers the impact to possible web page layout to the lowest.
 
 
 
@@ -141,30 +154,30 @@ otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which randomly sel
 It is the Bot Profile Mutator that takes responsibility of profile mutation to evade malicious content in advanced phishing websites.
 There are several items in the HTTP profile that can be modified or changed to camouflage the user as anti-phishing crawlers.
 Take User-Agent as an example. 
-Generally, anti-phishing crawlers contain ``bot'', ``crawler'', or the name of the company such as ``Google'', ``PayPal'' in the User-Agent string.
-We name the words that can trigger the cloaking technique in phishing attacks as \emph{triggering words}.
+Generally, anti-phishing crawlers contain ``bot'', ``crawler'', or the name of the company such as ``Google'', ``Facebook'' in the User-Agent string.
+We name the words that can trigger the cloaking technique in phishing attacks as \emph{triggering words} (e.g., words shown in~\autoref{tab:topsenswords}).
 Scripts in the phishing server typically read the string from HTTP requests and filter visits that contain crawler-like patterns.
 Another instance is Referer, where the visit is from previously.
 Typically the previous location for a potential victim is from phishing lures the attackers distributed earlier.
 Hence, phishers can block all visits who are not from the phishing lures.
 
 To take advantage of phisher's filtering algorithm, the Bot Profile Mutator modifies the identifiable items in the HTTP profile such as User-Agent and Referer before the browser sends out the request.
-In detail, after querying from the Fingerprinting Knowledgebase, \spartacus will append the successful sensitive word in the knowledgebase to user's own User-Agent string.
+In detail, after querying from the Fingerprinting Knowledgebase, \spartacus will append the successful triggering word in the knowledgebase to user's own User-Agent string.
 It also checks the necessity of mutation of Referer within the same record.
 If there is no successful record in the database,
-the mutator will randomly choose one word from a list of 407 triggering words.
-Additionally, it set the Referer to either None or ``www.google.com'' to further pretend the user as anti-phishing crawler.
+the mutator will choose one word from a list of 407 triggering words, following the order of popularity in~\autoref{tab:topsenswords}.
+Additionally, \spartacus sets the Referer to either None or ``www.google.com'' to further pretend the user as anti-phishing crawler.
 % 407 sensitive words
 
 
 % \subsubsection{Maliciousness Classification.}
-\noindent
-\textbf{Maliciousness Classification.}
+% \noindent
+\subsection{Maliciousness Classification}
 After submitting the web request to the server, \spartacus along with the browser will receive a response from the server.
 There are different situations of the response as follows:
 
 \begin{itemize}
-    \item The server responds either a benign page or an error page with status code of 4XX/5XX, or, it redirects the visit to a benign website, which is typically the website it impersonates;
+    \item The server responds either a benign page or an error page with status code of 4XX/5XX, or, it redirects the visit to a benign website, which is usually the website it impersonates;
     \item The server returns malicious web page content.
 \end{itemize}
 
@@ -178,7 +191,7 @@ For reason (b), the phishing website implements evasion techniques that remain u
 However, as \spartacus can be used by a large number of users, there is high possibility where a number of users will visit the same URL.
 \spartacus learns from different attempts of mutations of web request profiles that failed to trigger cloaking in the Fingerprinting Knowledgebase.
 Avoiding using the failed ones, \spartacus mutates the profile with new triggering words from the list, and hence we can eventually fingerprint the trigger of the evasion technique in the phishing website and apply such configuration for all \spartacus users who visit the same URL.
-Before \spartacus figures out the cloaking technique, it implements visual-similarity and content-based phishing detection mechanisms and alerts the user if any of the attributes detected in the content by matching the features with those in Phishing Attribute Database.
+% Before \spartacus figures out the cloaking technique, it implements visual-similarity and content-based phishing detection mechanisms and alerts the user if any of the attributes detected in the content by matching the features with those in Phishing Attribute Database.
 % otherwise, the browser user will see a benign web page content.
 
 
