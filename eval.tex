@@ -8,8 +8,17 @@ We implement \spartacus in terms of Chrome extension, which the anti-phishing ec
 and evaluate it from three perspectives, including effectiveness, latency, and potential impact on benign websites.
 These three aspects demonstrate the feasibility of the \spartacus framework in practice because it can successfully evade advanced phishing websites, can negligibly introduce latency to the users when visiting websites, and can run in the backstage without causing errors on benign websites.
 
+\noindent
+\textbf{Dataset.}
+In our evaluation, we use two different datasets, a malicious one and a benign one to test the effectiveness of \spartacus and its potential impact on benign websites.
 
+\noindent
+(1)~\emph{APWG Dataset}:
+For the effectiveness evaluation, \spartacus visits 160,728 phishing websites from November 2020 to July 2021 using Anti-Phishing Working Group (APWG) URL feed~\cite{ecrimeexchange}.
 
+\noindent
+(2)~\emph{Benign Dataset}:
+To evaluate the potential impact on benign websites, \spartacus leverages a dataset of 60,848 benign domains, which is randomly selected from 629,843 domains in Alexa Top One Million Domain List~\cite{AlexaTop1M}.
 
 % \subsection{Support From the Ecosystem}
 
@@ -35,13 +44,13 @@ These three aspects demonstrate the feasibility of the \spartacus framework in p
 	\quad
 	\begin{subfigure}[tb]{.31\textwidth}
 		\includegraphics[width=\linewidth]{figs/netflix_sp.pdf}
-        \caption{\spartacus'ed browser visit with error.}
+        \caption{\spartacus browser visit with error.}
         \label{fig:sp1}
 	\end{subfigure}%
 	\quad
 	\begin{subfigure}[tb]{.31\textwidth}
 		\includegraphics[width=\linewidth]{figs/netflix_sp2.png}
-        \caption{\spartacus'ed browser visit with content.}
+        \caption{\spartacus browser visit with content.}
         \label{fig:sp2}
 	\end{subfigure}%
 	\quad
