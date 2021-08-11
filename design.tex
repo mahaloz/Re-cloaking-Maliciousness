@@ -27,7 +27,8 @@ When a user tries to visit a URL, first the URL goes to blacklist maintained by 
 If the existing record is found in the blacklist, the framework will block the access. 
 If \spartacus decides the URL to be benign based on the domain information, it will keep user's original profile when requesting the server. 
 Otherwise, the front end will query the fingerprinting knowledgebase to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the \spartacus'ed profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness.
-The classification methodology is outside of \spartacus and the purpose is to verify the effectiveness of the mutated profile.
+The classification methodology stands outside of \spartacus and runs in the background without delaying the web page rendering.
+The purpose is to verify the effectiveness of the mutated profile.
 % If yes, the browser will show a warning sign to the user, or the web page content will be shown to the user. 
 The knowledgebase will be updated accordingly with the used profile and classification result.
 % under both situations. 
@@ -207,9 +208,9 @@ And some of the VPN services require user's location information and Personal Id
 Such privacy information may be leaked and hence abused by attackers.  
 We thereby enumerate the privacy information \spartacus collects to support the phishing evading services.
 
-\subsubsection{Privacy Information}
+\subsection{Privacy Information}
 
-\spartacus require four types of privacy information from users to prevent them from being trapped in advanced phishing websites.
+\spartacus requires four types of privacy information from users to prevent them from being trapped in advanced phishing websites.
 We do not collect any PII in \spartacus and hence can protect user's privacy to maximum extent.
 
 % \noindent
@@ -219,14 +220,14 @@ If \spartacus makes the decision to mutate the profile, it also needs the URL to
 % \noindent
 (2)~\emph{HTTP profile used in the request}:
 After \spartacus decides to mutate the user's HTTP profile before visiting a suspicious website, it requires the user's profile to modify it.
-The privacy information in the profile includes the User-Agent string, where browser version, browser type, and operating system information reside, and the Referer, which implies the previous location of the user.
+The privacy information in the profile includes the User-Agent string, where browser version, browser type, and operating system information reside, and the Referer, which implies where the user comes from.
 By accessing the profile, \spartacus can modify the fingerprints that phishers identify as anti-phishing crawlers to camouflage users.
 
 % \noindent
 (3)~\emph{Returned HTTP response}:
 \spartacus requires the returned HTTP response to inspect whether the website still contains maliciousness.
 For example, if the response status code is 4XX/5XX, it means that there will not be malicious content.
-If there is a 200 content returned,
+If there is valid content returned,
 an external classification process will determine its maliciousness by searching for phishing content such as sensitive words and log in form~\cite{xiang2011cantina+}.
 The inspection result marks the corresponding profile mutation successful or not.
 
@@ -236,7 +237,7 @@ When other users visit the same URL, the successful mutation will be shared to t
 If there is no successful variant, \spartacus will avoid to use the unsuccessful ones to mutate.
 
 
-\subsubsection{Privacy Consent and Protection}
+\subsection{Privacy Consent and Protection}
 
 We ensure that our \spartacus system well considers users' privacy information,
 so we have both consent and protection methodology to notice users and prevent their information from being stolen and abused.
