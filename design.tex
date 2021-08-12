@@ -18,7 +18,7 @@ The whole framework consists of two parts, \emph{front end} and \emph{back end}.
 The front end is responsible for the functionality performance, such as filtering already blacklisted URLs ,deciding whether to mutate, and mutating profiles in the HTTP request such as user agent.
 \spartacus also checks the information of benign websites to decide whether to mutate the profile.
 In the back end, we maintain several databases to provide support to the front end.
-It includes (1) Domain Information Database, which is used to process known URLs; 
+It includes (1) Domain Information Database, which is used to process trustworthy URLs;
 (2) Fingerprinting Knowledgebase, which stores the successful mutation;
 and (3) Anti-phishing Bot Profile Database, which contains the patterns that advanced phishing websites identify as crawlers.
 % phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
@@ -133,8 +133,9 @@ The decision makers consist of Blacklist Filter, Whitelist Filter, Knowledgebase
 We will elaborate them in order of the system flow.
 
 \noindent
-\textbf{Blacklist \& Whitlist Filter.}
-With the contribution of the anti-phishing ecosystem, \spartacus can filter known phishing URLs through the query to the Malicious URL BlackList Database.
+\textbf{Blacklist \& Trustworthy Filter.}
+With the contribution of the anti-phishing ecosystem, \spartacus can filter known phishing URLs that have already been blacklisted by commodity blacklists such as Google Safe Browsing and Microsoft SmartScreen.
+% through the query to the Malicious URL BlackList Database.
 Any match in the blacklist database will result in a block access to the URL without further action.
 Additionally, as discussed in~\Cref{ss:benignalg}, to minimize the impact on benign domains, \spartacus does not mutate the profile if it decides that the URL is benign based on the domain information.
 
@@ -248,7 +249,7 @@ To have users be aware of the types of privacy information \spartacus checks and
 we set up a privacy policy consent notice when people first time use \spartacus.
 At the beginning of the consent, we summarize the privacy information \spartacus use for user's convenience.
 Then, by using Privacy Policies~\cite{privacypolicy}, we create one privacy policy for \spartacus.
-We elaborate the information \spartacus collects, how it will be used, and how it will be transferred and shared.
+We elaborate the information \spartacus collects, how it will be used, and how it will be transferred and shared in the privacy police page.
 Users can choose to opt out and uninstall our system if they do not agree with the consent.
 
 \noindent

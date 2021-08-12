@@ -4,7 +4,7 @@
 \section{Evaluation}
 \label{s:eval}
 
-We implement \spartacus in terms of Chrome extension, which the anti-phishing ecosystem can leverage and spread trivially.
+We implement \spartacus in terms of a browser extension, which the anti-phishing ecosystem can leverage and spread trivially.
 and evaluate it from three perspectives, including effectiveness, latency, and potential impact on benign websites.
 These three aspects demonstrate the feasibility of the \spartacus framework in practice because it can successfully evade advanced phishing websites, can negligibly introduce latency to the users when visiting websites, and can run in the backstage without causing errors on benign websites.
 
@@ -14,7 +14,8 @@ In our evaluation, we use two different datasets, a malicious one, to test the e
 
 \noindent
 (1)~\emph{APWG Dataset}:
-For the effectiveness evaluation, \spartacus visits 160,728 live phishing websites from November 2020 to July 2021 using Anti-Phishing Working Group (APWG) URL feed~\cite{ecrimeexchange}.
+For the effectiveness evaluation, \spartacus visits 160,728 live phishing websites from November 2020 to July 2021 using Anti-Phishing Working Group (APWG) URL feed~\cite{ecrimeexchange},
+which is a curated dataset for reported phishing URLs, supported by a large number of collaborated members.
 
 \noindent
 (2)~\emph{Benign Dataset}:
@@ -60,9 +61,9 @@ To evaluate the potential impact on benign websites, \spartacus leverages a data
 % 	\vspace{-10pt}
 \end{figure*}
 
-We evaluate the effectiveness of \spartacus by conducting an experiment where we visit same phishing websites with different configurations of automated browsers, one with default setting, the other with \spartacus to mutate the profile.
-We simulate the default setting automated browser as normal users and the one with \spartacus as users with our system.
-The phishing URLs both browsers visit are from APWG, which is an open sourced dataset for reported phishing URLs.
+We evaluate the effectiveness of \spartacus automatically by conducting an experiment where we visit same phishing websites with different configurations of browsers, one with default user setting, the other with \spartacus to mutate the profile.
+We simulate the default setting browser as normal users and the one with \spartacus as users with our system.
+The phishing URLs both browsers visit are from the APWG Dataset.
 For each visit, we record the final landing web page content and URL.
 Either a legitimate final URL or a non-malicious web page content indicates the success of \spartacus evading phishing content for users.
 If there is still malicious content shown to \spartacus, it indicates that either the phishing website does not contain advanced evasion techniques, or \spartacus does not trigger them with current fingerprint.
@@ -71,7 +72,7 @@ As for the second, we believe that by visiting the same website with different c
 
 We examined 160,728 phishing URLs from APWG from November 2020 to July 2021,
 132,247 of which do not contain malicious content.
-We consider an HTTP response benign if (1) its web page content does not contain sensitive words or bad forms, according to CANTINA+~\cite{xiang2011cantina+};
+We consider an HTTP response benign if (1) its web page content does not contain maliciousness, such as phishy words or bad forms, according to CANTINA+~\cite{xiang2011cantina+};
 (2) the response status code is an error one (4XX/5XX);
 or (3) the destination domain is legitimate, excluding web hosting service domains.
 \autoref{fig:effectiveness} demonstrates the difference of response web page content between default and \spartacus'ed browser visit for a cloaked phishing websites.
@@ -88,7 +89,28 @@ Because the web page content returned through \spartacus's visit does not contai
 
 % \textcolor{blue}{eval result}
 
+\subsection{Effectiveness of triggering words}
 
+According to the design, the profile mutator of \spartacus selects one of 407 triggering words, following the order of their popularity in examined phishing kits.
+So in this section, we evaluate the effectiveness of each triggering word on triggering fingerprinting cloaking techniques in phishing websites.
+
+We test all the triggering words by appending each after the User-Agent string within \spartacus and then visiting the same phishing website.
+Similarity to the evaluation of effectiveness of \spartacus, we also visit the website using a default browser as a comparison.
+We conduct the experiment on 916 phishing websites.
+Except ABC websites that show same content on all HTTP profiles,
+DEF ones show web page differently between \spartacus'ed browser and default browser.
+
+In DEF cloaked phishing websites, the triggering words have different evasion abilities.
+Table X is the result of top 10 effective triggering words evading phishing content in \spartacus.
+In the table, word XYZ has the most evasion record.
+X\% of the cloaked phishing websites can be evaded by appending XYZ in the User-Agent using \spartacus.
+Compared with the rank in~\autoref{tab:topsenswords}, it is X-th word in the list.
+The high effectiveness of word XYZ confirms its high rank in the top used blocked words in the phishing kits.
+Similarly, top effective words such as XXX, ZZZ, and YYY also have a high usage in phishing kits.
+On the other hand, word XYZ and XXX combined can make all tested cloaked phishing websites return benign content to users.
+
+The evaluation result shows that our triggering word list can evade phishing websites with fingerprinting cloaking techniques.
+Furthermore, it indicates that a small number of triggering words can evade a myriad of cloaked phishing websites.
 
 
 \subsection{Efficiency and Latency}

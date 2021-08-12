@@ -45,6 +45,8 @@ Therefore, with \spartacus and existing methodologies, the anti-phishing ecosyst
 As discussed in~\autoref{s:background}, fingerprinting cloaking techniques in phishing server can inspect IP, Hostname, User-Agent, and Referrer to classify whether the visitor is an anti-phishing crawler.
 In \spartacus design, we only consider to mutate User-Agent and Referrer in the HTTP request.
 This is because without permission from server owners, we cannot use their IP and Hostname to route our HTTP request.
+Another reason is that mutating IP addresses means rerouting traffic on the request and response.
+However, such reroute will introduce latency.
 So, it may contain a limitation where \spartacus cannot evade phishing websites that only identify crawlers/bots by IPs and Hostnames.
 However, with our analysis on phishing kits, we found that 83.28\% of phishing kits with fingerprinting cloaking techniques implemented User-Agent checker.
 With the high usage ratio of the User-Agent checker, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
