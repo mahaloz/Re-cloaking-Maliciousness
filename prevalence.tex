@@ -10,7 +10,9 @@
 \end{figure}
 
 To understand the prevalence of cloaking techniques used in advanced phishing kits,
-we first manually inspect 56 phishing kits, and extract common patterns how fingerprinting cloaking techniques are implemented in phishing kits.
+we first manually inspect 56 phishing kits, 
+which is randomly chosen 10.93\% from a dataset of~\emph{phishunt.io}~\cite{phishunt},
+and extract common patterns how fingerprinting cloaking techniques are implemented in phishing kits.
 
 The patterns include (1) sensitive file names such as ``antibot'', ``blocker'', and ``antirobot''; (2) blocked words, for example, an array containing crawler information such as ``google'', ``paypal'', or ``phishtank'' (e.g., \texttt{blocked\_words} in~\autoref{fig:servercloaking}); (3) IP checker that blocks visit from certain IP addresses, such as \texttt{bannedIP} in~\autoref{fig:servercloaking}; and (4) error header, returning an error status code and an error web page, such as \texttt{header} function in PHP.
 These attributes reflect the implementation of fingerprinting cloaking techniques in phishing kits.

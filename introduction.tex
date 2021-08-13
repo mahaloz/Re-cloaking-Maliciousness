@@ -9,37 +9,49 @@ Therefore, the current anti-phishing ecosystem leaves advanced phishing websites
 Phishing websites adopt \emph{evasion} techniques to delay or evade detection by automated anti-phishing systems in the cat-and-mouse game,
 which contribute to maximize phishers' return-on-investment~\cite{thomas2017data}.
 The evasion techniques, also known as~\emph{cloaking}, implemented in phishing websites, attempt to distinguish the visits from potential victims out of those from anti-phishing crawlers.
-The cloaking techniques include two categories: server-side and client-side.
-Server-side cloaking techniques reside in phishing servers and perform based on the HTTP request.
+The cloaking techniques include two categories: server-side~\cite{oest2018inside} and client-side~\cite{zhang2021crawlphish}.
+Server-side cloaking techniques reside in phishing servers and perform based on the HTTP request. 
+Among them, fingerprinting cloaking identifies visits through the items in the request, such as IP, User-Agent, and Referrer.
 The client-side ones take into effect based on the execution of JavaScript in user's browser.
 The cloaking techniques show real phishing content to visitors who they decide as ``real human,'' while display a benign-looking web page to those who are identified as ``anti-phishing crawler.''
 The damage brought by these phishing websites' efforts is not only that they steal just account numbers and passwords,
 but that the phishing websites nowadays try to dump all information including victim's identity~\cite{thomas2017data}.
 Thus, the cloaked phishing websites cause a wider damage to the whole society and are very difficult to effectively and efficiently mitigate~\cite{oest2020sunrise, zhang2021crawlphish}.
 
+According to Oest et al.~\cite{oest2020sunrise}, such sophisticated phishing websites cause majority of real-world harm.
 Thwarting phishers' evasion efforts is, thus, treated by the anti-phishing ecosystem as a very important issue,
 because they think that correct web page retrieval and timely detection is the key to successful mitigation~\cite{oest2020sunrise, zhang2021crawlphish}.
 Following this trajectory, prior research has proposed methodologies categorizing and mitigating cloaking techniques in phishing~\cite{oest2018inside, oest2019phishfarm, zhang2021crawlphish}.
 However, the server-side cloaking techniques can still defeat key ecosystem defenses such as blacklist-based mechanism~\cite{oest2019phishfarm}.
 With so many filtering conditions in the cloaking techniques,
-it is very difficult for the content-based anti-phishing systems to acquire real phishing content~\cite{oest2018inside, oest2020phishtime}.
-This magnifies an issue that current anti-phishing systems cannot provide a reliable protection for users against phishing websites with cloaking techniques.
-So how about we consider the problem from a different angle:
+it is very difficult for the content-based anti-phishing systems to acquire real phishing content in a large scale~\cite{oest2018inside, oest2020phishtime},
+because anti-phishing systems need to enumerate countless HTTP profiles to visit the phishing websites to bypass the cloaking techniques.
+In this way, phishers can still be beneficial from the cloaking techniques.
+% This magnifies an issue that current anti-phishing systems cannot provide a reliable protection for users against phishing websites with cloaking techniques.
+
+
+We first perform an evaluation to analyze the prevalence of fingerprinting cloaking techniques in phishing kits.
+% and the ability of current anti-phishing systems against phishing websites.  
+In total, we analyzed 2,933 phishing kits from \emph{phishunt.io}~\cite{phishunt} and Cisco, and discovered that 96.52\% (2,831) of them contain fingerprinting cloaking techniques, which shows that such evasion is very prevalent within our dataset.
+So, since we know to expect cloaking in phishing, how about we consider the problem from a different angle:
 the ultimate goal to mitigate or defeat phishing is to prevent potential victims from seeing any phishing content.
 So why do we devote ourselves trying to sneak through all the challenges that cloaking techniques set and reach to the phishing content?
 Why not trigger the cloaking techniques from the client-side and let phishing websites return a benign-looking web page to users?
 In this way, users will not see phishing content in real time, and a lose-lose situation is shown to phishers because they cannot differentiate visits from between users and anti-phishing crawlers.
 
 To this end, we propose \spartacus, a framework that disguises Internet users as anti-phishing crawlers from the client-side to request web page content of a suspicious URL, while remain users' own profiles on visiting benign websites.
-Before visiting a URL, \spartacus queries the domain information, such as reputation, to decide whether to mutate the HTTP profile.
-If not, \spartacus allows the request sent with user's default profile.
-Otherwise, \spartacus mutates the items in the HTTP profile such as User-Agent string and Referrer to make it look like an anti-phishing crawler.
+% Before visiting a URL, \spartacus queries the domain information, such as reputation, to decide whether to mutate the HTTP profile.
+% If not, 
+\spartacus allows the request sent with user's default profile when visiting trustworthy websites.
+When visiting suspicious websites, \spartacus mutates the items in the HTTP profile such as User-Agent string, Referrer, or IP (through a proxy server) to make it look like an anti-phishing crawler.
 % that will be inspected by cloaking techniques in the phishing server before sending requests to suspicious URLs.
-When the cloaking script examines the HTTP request, it will identify that the visit is from an anti-phishing infrastructure, and will return a benign-looking web page to users.
+When the fingerprinting cloaking script examines the HTTP request, it will identify that the visit is from an anti-phishing infrastructure, and will return a benign-looking web page to users.
+\spartacus traps phishers into a dilemma: phishers can choose to use more precise conditions to identify traffic, for example, they mark a visitor as crawler only when IP \texttt{AND} User-Agent are match.
+This will allow more traffic in and bypass \spartacus to some extent,
+but such option will make anti-phishing crawlers easy to sneak through the cloaking techniques.
+On the other hand, they can choose to build up more criteria, which allows less traffic, but it is easy for \spartacus to trigger.
 
-We first perform an evaluation to analyze the prevalence of fingerprinting cloaking techniques in phishing kits
-% and the ability of current anti-phishing systems against phishing websites.  
-In total, we analyzed 2,933 phishing kits and discovered that 96.52\% (2,831) of them contain fingerprinting cloaking techniques, which shows that such evasion is very prevalent within our dataset.
+
 Then, we deploy the \spartacus framework in large-scale to evaluate the effectiveness, efficiency, and potential impact on users' browsing activity.
 In total, over a period of nine months from late-2020 to mid-2021, \spartacus visits \totalphishing phishing websites in the wild and evades 82.28\% of them.
 In addition, the \spartacus framework as a browser extension has negligible reaction and scripting time, compared with other popular plugins~\cite{exthouse}, and hence it does not slow down the web page rendering of the benign websites.
@@ -49,10 +61,15 @@ We found that with \spartacus installed, the benign website can still display pr
 Functionalities in the website such as buttons/links, online chat, register/login, shopping cart and checkout can correctly perform without any error.
 
 We also evaluate the support from current anti-phishing systems against phishing websites.
+We totally submit 45,526 phishing websites to anti-phishing systems when \spartacus visits them and query the result every 15 minutes.
+Among the submitted phishing websites, 24,154 can be evaded by \spartacus but cannot detected by anti-phishing systems;
+16,698 can be evaded and detected;
+4,598 cannot be evaded but can be detected;
+and 76 can neither be evaded nor detected.
 % to test if they can timely detect the phishing websites \spartacus cannot evade.
-Comfortingly, we notice that current anti-phishing systems can timely detect and blacklist 98.33\% of phishing websites that show phishing content to any HTTP profile.
+Comfortingly, we notice that current anti-phishing systems can timely (0.36 hours) detect and blacklist 98.33\% of phishing websites that show phishing content to any HTTP profile.
 However, when encountering with advanced phishing websites with fingerprinting cloaking (showing different content to different profile), they do not perform well.
-Only 40.87\% of the websites can be detected, and the detection time is more than three times as that on basic phishing.
+Only 40.87\% of the websites can be detected, and the detection time (2.58 hours) is more than eight times as that on basic phishing.
 
 To bypass \spartacus, phishers can only disable some criteria and allow more traffic in, because they fail to tell the difference between victim traffic and crawler traffic.
 However, this loose strategy will enable more crawlers in and hence the websites can be blocked faster.
@@ -63,8 +80,7 @@ Our contributions are thus as follows:
 
 \begin{itemize}
     \item An analysis of modern phishing kits to understand the prevalence of fingerprinting cloaking techniques.
-    \item An evaluation of current anti-phishing systems to reveal the less capability against phishing websites with such evasion.
     \item An automated framework that can evade phishing websites with fingerprinting cloaking while negligibly impact user's browsing activity.
-    \item An evaluation for \spartacus to measure its effectiveness and efficiency.
-    \item A dilemma where phishers cannot differentiate crawler and human visits and hence lose the chance to lure credentials.
+    \item An evaluation for \spartacus as a browser extension to measure its effectiveness and efficiency and that of current anti-phishing systems to reveal the less capability against phishing websites with such evasion.
+    % \item A dilemma where phishers cannot differentiate crawler and human visits and hence lose the chance to lure credentials.
 \end{itemize}

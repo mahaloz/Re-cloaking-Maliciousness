@@ -1,7 +1,7 @@
 \section{Design}
 
 
-We aim to evade advanced phishing websites from the user end in real time when users visit them by triggering the fingerprinting cloaking techniques.
+We aim to evade cloaked phishing websites from the user end in real time when users visit them by triggering the fingerprinting cloaking techniques.
 To this end, we design, implement, and evaluate~\spartacus, a framework that automatically cloaks users and hence evades malicious websites that implement fingerprint cloaking.
 
 \begin{figure*}
@@ -19,18 +19,18 @@ The front end is responsible for the functionality performance, such as filterin
 \spartacus also checks the information of benign websites to decide whether to mutate the profile.
 In the back end, we maintain several databases to provide support to the front end.
 It includes (1) Domain Information Database, which is used to process trustworthy URLs;
-(2) Fingerprinting Knowledgebase, which stores the successful mutation;
+(2) Fingerprinting Database, which stores the successful mutation;
 and (3) Anti-phishing Bot Profile Database, which contains the patterns that advanced phishing websites identify as crawlers.
 % phishing attributes, which is used to distinguish the maliciousness of returned web page content. 
 
 When a user tries to visit a URL, first the URL goes to blacklist maintained by current anti-phishing systems and \spartacus queries its domain information.
 If the existing record is found in the blacklist, the framework will block the access. 
 If \spartacus decides the URL to be benign based on the domain information, it will keep user's original profile when requesting the server. 
-Otherwise, the front end will query the fingerprinting knowledgebase to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the \spartacus'ed profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness.
+Otherwise, the front end will query the fingerprinting Database to see if we have processed the same url before, if found, we will use recorded profile to request the website, if not, we will mutate profile to a bot one. Then with the \spartacus'ed profile, HTTP request is sent to the server. After getting the page content, we determine whether there is maliciousness.
 The classification methodology stands outside of \spartacus and runs in the background without delaying the web page rendering.
 The purpose is to verify the effectiveness of the mutated profile.
 % If yes, the browser will show a warning sign to the user, or the web page content will be shown to the user. 
-The knowledgebase will be updated accordingly with the used profile and classification result.
+The Fingerprinting Database will be updated accordingly with the used profile and classification result.
 % under both situations. 
 
 
@@ -55,7 +55,7 @@ Moreover, all 150 benign URLs fall into the top viewed sub-domains of the corres
 
 From the analysis result, we summarize that a legitimate domain has a higher reputation and longer life than a malicious one, and they are within top viewed sub-domains.
 With the finding, we can further reduce the possibility of falsely evading benign websites for \spartacus by querying the attributes of the domain to decide whether to mutate the HTTP profile.
-We choose the phishing domain age that resides on 75\% in the list (1,501) and Neutral level as threshold.
+We choose the phishing domain age that resides on 75\% in the list (1,501) and Neutral level as threshold because such threshold can clearly divide trustworthy domains and un-trustworthy ones.
 If one URL has a lifespan lower than 1,501 days and its reputation level is Neutral or worse, or its sub-domain is not top viewed, \spartacus will mutate the HTTP profile before request.
 The logic is shown in~\Cref{alg:mutatelogic}.
 
@@ -66,9 +66,9 @@ The logic is shown in~\Cref{alg:mutatelogic}.
 \State $p = default\_profile$
 \State $u = url\_to\_visit$
 
-\If{\State $reputation(u)~\leq Neutral$ \texttt{and}
-\State $duration(u)~\geq 1,501$ \texttt{or} 
-\State $d.domain$ NOT in top reviewed sub-domains}
+\If{\State ($reputation(u)~\leq Neutral$) \texttt{and}
+\State ($duration(u)~\geq 1,501$) \texttt{or} 
+\State ($d.domain$ NOT in top reviewed sub-domains)}
     \State $p = mutate\_http\_profile(p)$
 \EndIf
 
@@ -105,16 +105,17 @@ We collect known phishing URLs from common blacklists so that \spartacus can lev
 
 
 \noindent
-\textbf{Fingerprinting Knowledgebase.}
-The fingerprinting knowledgebase is shared among users who leverage \spartacus and stores profiles with which users cannot see malicious content when requesting the server.
-After the maliciousness classification, if phishing content is not found in the responded content, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the knowledgebase.
-When other users try to visit the same URL, \spartacus will use the corresponding profile recorded in the database to guarantee that users do not receive malicious content.
+\textbf{Fingerprinting Database.}
+The Fingerprinting Database is shared among users who leverage \spartacus and stores profiles with which users cannot see malicious content when requesting the server.
+After the maliciousness classification, if phishing content is not found in the responded content, then we mark the mutated profile used in the request this time, connect it with the URL, and update the pair as success into the Fingerprinting Database.
+When other users try to visit the \emph{same} URL, \spartacus will use the corresponding profile recorded in the Fingerprinting Database to prevent users from receiving malicious content.
 
 \noindent
 \textbf{Anti-phishing Bot Profile Database.}
 The profiles of anti-phishing system crawlers keep updating all the time.
 Accordingly, phishers refresh their blacklist to precisely evade the access from the anti-phishing bots.
-Therefore, we crawl the up-to-date patterns of anti-phishing systems and blocked word list from retrieved phishing kits into the database and hence \spartacus can leverage newest patterns to visit suspicious websites and receive benign web page content by triggering the cloaking techniques.
+Therefore, we crawl the up-to-date patterns of anti-phishing systems~\cite{crawlerinfo} and blocked word list from retrieved phishing kits into the database.
+And hence \spartacus can leverage newest patterns to visit suspicious websites and receive benign web page content by triggering the cloaking techniques.
 
 % \noindent
 % \textbf{Phishing Attribute Database.}
@@ -129,7 +130,7 @@ Therefore, we crawl the up-to-date patterns of anti-phishing systems and blocked
 \subsection{Decision Makers on A URL Visit}
 
 When a user attempts to visit a URL, the URL will go through several decision makers to assure a safe browsing.
-The decision makers consist of Blacklist Filter, Whitelist Filter, Knowledgebase Query, and Maliciousness Classification.
+The decision makers consist of Blacklist Filter, Whitelist Filter, Database Query, and Maliciousness Classification.
 We will elaborate them in order of the system flow.
 
 \noindent
@@ -144,9 +145,9 @@ Additionally, as discussed in~\Cref{ss:benignalg}, to minimize the impact on ben
 % Similar to the blacklist filter, the whitelist filter in \spartacus helps filter the whitelisted URLs so that the user can receive the web page content with best out-looking that the organization configures to fit in the visit from different browsers or devices.
 
 \noindent
-\textbf{Knowledgebase Query.}
-When the URL does not fall into either Blacklist or Whitelist filter, \spartacus will examine whether such URL has been visited once by either the user or other users by querying the Fingerprinting Knowledgebase.
-If a record is found in the knowledgebase, \spartacus will mutate the web request profile according to the record to make sure that such web request profile will return a benign web page content;
+\textbf{Database Query.}
+When the URL does not fall into either Blacklist or Whitelist filter, \spartacus will examine whether such URL has been visited once by either the user or other users by querying the Fingerprinting Database.
+If a record is found in the Database, \spartacus will mutate the web request profile according to the record to make sure that such web request profile will return a benign web page content;
 otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which selects one profile from Anti-phishing Bot Profile Database to submit the web request and lowers the impact to possible web page layout to the lowest.
 
 
@@ -162,9 +163,12 @@ Scripts in the phishing server typically read the string from HTTP requests and 
 Another instance is Referer, where the visit is from previously.
 Typically the previous location for a potential victim is from phishing lures the attackers distributed earlier.
 Hence, phishers can block all visits who are not from the phishing lures.
+At last, the profile mutator can leverage proxy servers to camouflage user's HTTP request.
+For example, a proxy server established in \emph{Amazon AWS} is very useful because phishers have knowledge that some anti-phishing crawlers are built in AWS EC2.
+In this case, the mutator can show the IP where crawlers are often from to the phishing server to trigger the cloaking techniques.
 
 To take advantage of phisher's filtering algorithm, the Bot Profile Mutator modifies the identifiable items in the HTTP profile such as User-Agent and Referer before the browser sends out the request.
-In detail, after querying from the Fingerprinting Knowledgebase, \spartacus will append the successful triggering word in the knowledgebase to user's own User-Agent string.
+In detail, after querying from the Fingerprinting Database, \spartacus will append the successful triggering word in the Database to user's own User-Agent string.
 It also checks the necessity of mutation of Referer within the same record.
 If there is no successful record in the database,
 the mutator will choose one word from a list of 407 triggering words, following the order of popularity in~\autoref{tab:topsenswords}.
@@ -191,7 +195,7 @@ The latter situation is what \spartacus needs to handle.
 As for reason (a), \spartacus relies on the current anti-phishing systems that are well capable of detecting basic phishing websites within a short time period and hence the whole ecosystem can be protected from such phishing attacks.
 For reason (b), the phishing website implements evasion techniques that remain unknown after one visit.
 However, as \spartacus can be used by a large number of users, there is high possibility where a number of users will visit the same URL.
-\spartacus learns from different attempts of mutations of web request profiles that failed to trigger cloaking in the Fingerprinting Knowledgebase.
+\spartacus learns from different attempts of mutations of web request profiles that failed to trigger cloaking in the Fingerprinting Database.
 Avoiding using the failed ones, \spartacus mutates the profile with new triggering words from the list, and hence we can eventually fingerprint the trigger of the evasion technique in the phishing website and apply such configuration for all \spartacus users who visit the same URL.
 % Before \spartacus figures out the cloaking technique, it implements visual-similarity and content-based phishing detection mechanisms and alerts the user if any of the attributes detected in the content by matching the features with those in Phishing Attribute Database.
 % otherwise, the browser user will see a benign web page content.
@@ -203,20 +207,21 @@ Avoiding using the failed ones, \spartacus mutates the profile with new triggeri
 
 \section{Privacy}
 
-Note that installing and using \spartacus may lead to the compromise of privacy.
-For example, some discount discovery extension may leak the annual income level of users~\cite{honey}.
-And some of the VPN services require user's location information and Personal Identifiable Information (PII)~\cite{ZenMate}.
-Such privacy information may be leaked and hence abused by attackers.  
-We thereby enumerate the privacy information \spartacus collects to support the phishing evading services.
+In this section, we discuss the sensitive information \spartacus requires from users to support the phishing evasion services and how it protects the privacy.
+% Note that installing and using \spartacus may lead to the compromise of privacy.
+% For example, some discount discovery extension may leak the annual income level of users~\cite{honey}.
+% And some of the VPN services require user's location information and Personal Identifiable Information (PII)~\cite{ZenMate}.
+% Such privacy information may be leaked and hence abused by attackers.  
+% We thereby enumerate the privacy information \spartacus collects to support the phishing evading services.
 
 \subsection{Privacy Information}
 
-\spartacus requires four types of privacy information from users to prevent them from being trapped in advanced phishing websites.
+\spartacus requires four types of sensitive information from users to prevent them from being trapped in advanced phishing websites.
 We do not collect any PII in \spartacus and hence can protect user's privacy to maximum extent.
 
 % \noindent
 (1)~\emph{URL a user tries to visit}: \spartacus needs it to query the reputation, age of domain, and top reviewed subdomains to determine whether to mutate.
-If \spartacus makes the decision to mutate the profile, it also needs the URL to query the Fingerprinting Knowledgebase for successful mutation that can evade malicious content.
+If \spartacus makes the decision to mutate the profile, it also needs the \emph{hashed} URL to query the Fingerprinting Database for successful mutation that can evade malicious content.
 
 % \noindent
 (2)~\emph{HTTP profile used in the request}:
@@ -227,13 +232,15 @@ By accessing the profile, \spartacus can modify the fingerprints that phishers i
 % \noindent
 (3)~\emph{Returned HTTP response}:
 \spartacus requires the returned HTTP response to inspect whether the website still contains maliciousness.
-For example, if the response status code is 4XX/5XX, it means that there will not be malicious content.
+% For example, if the response status code is 4XX/5XX, it means that there will not be malicious content.
 If there is valid content returned,
 an external classification process will determine its maliciousness by searching for phishing content such as sensitive words and log in form~\cite{xiang2011cantina+}.
 The inspection result marks the corresponding profile mutation successful or not.
 
 (4)~\emph{URL and profile share}:
-\spartacus at last uploads the URL and the inspection result along with the corresponding HTTP profile to the server.
+\spartacus at last uploads the \emph{hashed} URL and the inspection result along with the corresponding HTTP profile to the server.
+In the database, we only store the triggering word \spartacus uses, whether to blank Referrer, and which proxy server to reroute.
+We do not save any user-related information in the Fingerprinting Database.
 When other users visit the same URL, the successful mutation will be shared to them.
 If there is no successful variant, \spartacus will avoid to use the unsuccessful ones to mutate.
 
@@ -254,11 +261,11 @@ Users can choose to opt out and uninstall our system if they do not agree with t
 
 \noindent
 \textbf{Protection Methodology.}
-First of all, the privacy information \spartacus collects does not contain any PII, which fundamentally protects users' privacy.
+First of all, the privacy information \spartacus collects does not contain any PII, which minimizes potential harm.
 Secondly, when the URL and its corresponding HTTP profile is transferred to the server,
 it is hashed first and uploaded to the server.
 Lastly, when other users look up existing records from the server,
 their URL is also hashed first and looked up in the database in hash version.
-Furthermore, what they receive from the Fingerprinting Knowledgebase is whether specific sensitive words can evade maliciousness.
+Furthermore, what they receive from the Fingerprinting Database is whether specific sensitive words can evade maliciousness.
 They will not know who exactly ever visited the website.
 And hence, the privacy of the user can be protected.

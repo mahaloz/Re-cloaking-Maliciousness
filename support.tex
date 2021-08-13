@@ -2,12 +2,13 @@
 
 Note that there are 17.72\% URLs that \spartacus cannot evade,
 as we show in~\autoref{s:eval}.
-We hypothesize that these websites are basic phishing that do not contain cloaking techniques.
+We hypothesize that these phishing websites are ones that do not reply on User-Agent or Referrer cloaking techniques.
 The anti-phishing systems nowadays such as Google Safe Browsing and VirusTotal can timely detect and/or blacklist traditional phishing attacks.
 Therefore, they can handle the phishing websites that cannot be evaded by \spartacus.
 And hence, \spartacus with the support of the anti-phishing ecosystem can prevent all types of phishing.
 
-To verify our hypothesis, we evaluate the blacklist speed of current anti-phishing systems on the examined phishing URLs.
+To verify our hypothesis, we evaluate the blacklist/detection speed of current anti-phishing systems on the examined phishing URLs.
+We submit the phishing URLs to Google Safe Browsing and VirusTotal at the same time when \spartacus visits them, and query the result every 15 minutes to calculate the speed.
 Due to the deployment of this experiment, we did not submit all phishing URLs.
 Among 4,674 submitted phishing URLs that are not evaded by \spartacus, anti-phishing systems such as Google Safe Browsing and VirusTotal can blacklist 4,598 of them.
 % The median detection speed is 28 minutes.
@@ -47,7 +48,7 @@ Therefore, \spartacus not only can protect users from advanced phishing websites
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{figs/venn_eval_3.pdf}
+\includegraphics[width=\linewidth]{figs/venn_eval_3_new.pdf}
 \caption{Venn Diagram describing the evasion from \spartacus and support from the anti-phishing ecosystem.}
 \label{fig:venn_support}
 % \vspace{-10pt}

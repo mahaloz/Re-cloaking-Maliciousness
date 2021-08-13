@@ -4,7 +4,7 @@
 \section{Evaluation}
 \label{s:eval}
 
-We implement \spartacus in terms of a browser extension, which the anti-phishing ecosystem can leverage and spread trivially.
+We implement the front and back end of \spartacus as a Chrome browser extension, which the anti-phishing ecosystem can leverage and spread trivially.
 and evaluate it from three perspectives, including effectiveness, latency, and potential impact on benign websites.
 These three aspects demonstrate the feasibility of the \spartacus framework in practice because it can successfully evade advanced phishing websites, can negligibly introduce latency to the users when visiting websites, and can run in the backstage without causing errors on benign websites.
 
@@ -33,7 +33,7 @@ To evaluate the potential impact on benign websites, \spartacus leverages a data
 
 
 \subsection{Effectiveness}
-
+\label{ss:effectiveness}
 
 \begin{figure*}
 \centering
@@ -71,13 +71,13 @@ For the first situation, the current anti-phishing ecosystem has proposed method
 As for the second, we believe that by visiting the same website with different configurations of HTTP requests mutated by \spartacus, the evasion techniques embedded in the phishing website can be triggered eventually. 
 
 We examined 160,728 phishing URLs from APWG from November 2020 to July 2021,
-132,247 of which do not contain malicious content.
-We consider an HTTP response benign if (1) its web page content does not contain maliciousness, such as phishy words or bad forms, according to CANTINA+~\cite{xiang2011cantina+};
-(2) the response status code is an error one (4XX/5XX);
-or (3) the destination domain is legitimate, excluding web hosting service domains.
+132,247 (82.28\%) of which do not contain malicious content, just by mutating User-Agent and Referrer in \spartacus.
+We consider an HTTP response benign if (1) its web page content does not contain maliciousness, such as phishy words or bad forms, according to the content features stated in CANTINA+~\cite{xiang2011cantina+};
+% (2) the response status code is an error one (4XX/5XX);
+or (2) the destination domain is legitimate, excluding web hosting service domains.
 \autoref{fig:effectiveness} demonstrates the difference of response web page content between default and \spartacus'ed browser visit for a cloaked phishing websites.
 The content in~\autoref{fig:normal} shows the phishing content when a real person visits it.
-On the other hand, when \spartacus appends a bot-looking string to the existing User-Agent, such as~\emph{googlebot}, the phishing server considers the visit as from an anti-phishing infrastructure.
+On the other hand, when \spartacus appends a bot-looking string to the existing User-Agent, such as~\emph{bot}, the phishing server considers the visit as from an anti-phishing infrastructure.
 Thus, it denies the request from \spartacus and an error web page is shown as~\autoref{fig:sp1}.
 On the other hand, advanced phishing servers can redirect visit to a benign domain with status code of 200 instead of returning an error.
 In this way, \spartacus'ed browser will receive web page contents such as~\autoref{fig:sp2},
@@ -87,9 +87,10 @@ from \spartacus.
 It shows that \spartacus can impersonate anti-phishing crawler and trigger the cloaking techniques of advanced phishing websites.
 Because the web page content returned through \spartacus's visit does not contain any maliciousness, Internet users will not be trapped in the attack.
 
+
 % \textcolor{blue}{eval result}
 
-\subsection{Effectiveness of triggering words}
+\subsection{Effectiveness of Triggering Words}
 
 According to the design, the profile mutator of \spartacus selects one of 407 triggering words, following the order of their popularity in examined phishing kits.
 So in this section, we evaluate the effectiveness of each triggering word on triggering fingerprinting cloaking techniques in phishing websites.
@@ -111,6 +112,23 @@ On the other hand, word XYZ and XXX combined can make all tested cloaked phishin
 
 The evaluation result shows that our triggering word list can evade phishing websites with fingerprinting cloaking techniques.
 Furthermore, it indicates that a small number of triggering words can evade a myriad of cloaked phishing websites.
+
+
+\subsection{Effectiveness of Proxy Server}
+
+Even though \spartacus can successfully evade phishing content in over 80\% of the phishing websites by mutating User-Agent and Referrer string, 
+it is still very important to update its arsenal so that \spartacus can use different weapons against different cloaking techniques (e.g., those who only check IP). 
+Therefore, we conduct another experiment where \spartacus leverages a proxy server residing in Amazon AWS, where crawlers are often from, to visit phishing websites.
+This experiment is to show the effectiveness of a crawler-like IP on evading cloaked phishing websites.
+
+\spartacus visits ABC phishing websites by rerouting the request through the proxy server.
+Similar to the evaluation procedure in~\Cref{ss:effectiveness},
+we visit those websites in both default browser and \spartacus browser.
+Then we compare the screenshot and HTML similarity of each phishing website on both sides.
+Among the visited phishing websites, XX\% of them can be evaded by \spartacus through proxy server.
+Therefore, \spartacus can evade phishing websites that implement IP, User-Agent, or Referrer cloaking.
+Phishers may design emerging cloaking techniques in the future, but we design \spartacus as an extendable framework.
+Additional fingerprints can be added into the existing framework to make it more evasive against cloaked phishing websites.
 
 
 \subsection{Efficiency and Latency}
@@ -227,7 +245,7 @@ With applying~\Cref{alg:mutatelogic}, we evaluated \spartacus based on the thres
 Hence, only 0.04\% of 60,848 domains are falsely evaded.
 It is because the 29 domains do not fall into the high reputation group of \spartacus's non-mutation criteria.
 As one possible mitigation, we provide a channel for users to report falsely evaded websites.
-Once receiving the report from the client side, we will conduct manual inspection and whitelist the false-positives.
+Once receiving the report, we will conduct manual inspection and whitelist the false-positives.
 % Additionally, 39 of the domains show different layouts between default and \spartacus browsers.
 % As we discussed above, such difference will not affect the activities of normal users,
 % but after applying~\Cref{alg:mutatelogic}, \spartacus and normal browsers perform more alike on benign domains.

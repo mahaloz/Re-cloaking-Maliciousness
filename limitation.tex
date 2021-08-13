@@ -6,16 +6,22 @@ Within advanced phishing websites, server-side and client-side cloaking techniqu
 Because \spartacus focuses on the evasion of phishing attacks with server-side cloaking techniques,
 there may be a countermeasure that attackers can use other types of phishing websites to harm individuals and organizations.
 
-Phishers can use basic phishing websites, phishing websites with client-side cloaking, or those with only IP/Hostname filtering.
+Phishers can use basic phishing websites, phishing websites with client-side cloaking, or those with User Interaction Cloaking (e.g., CAPTCHAs).
 As we discussed above and analysis result from Oest et al.~\cite{oest2020phishtime}, basic phishing websites can be detected and blacklist by anti-phishing systems as fast as 28 minutes.
 Distributing basic phishing websites cannot help phishers maximize their return-on-investment.
 As for client-side cloaking techniques,
 phisher can implement them into their websites to bypass \spartacus.
 However, Zhang et al.~\cite{zhang2021crawlphish} has proposed a methodology to detect such evasion by force-executing JavaScript.
 Hence, client-side cloaked phishing websites can be timely detected as well.
-At last, phishers can loose the evasion criteria, such as by only checking IP and Hostnames.
-Anti-phishing infrastructures can learn the lesson and set up the anti-phishing crawlers in residential IPs.
-Such move is equal to welcome crawlers to visit.
+At last, phishers can set up a CAPTCHA web page as a barrier before showing phishing content.
+This can bypass the evasion from~\spartacus.
+However, using CAPTCHA will bring poor user experience, which may lower phishers profit because it is time consuming and challenging for potential victims~\cite{captcha}.
+Secondly, it does not distinguish real users from anti-phishing crawlers because every visitor needs to solve the puzzle~\cite{captcha}.
+Recently, researchers have proposed methodologies bypassing it~\cite{sivakorn2016m,stark2015captcha, zhang2021crawlphish}.
+
+% At last, phishers can loose the evasion criteria, such as by only checking IP and Hostnames.
+% Anti-phishing infrastructures can learn the lesson and set up the anti-phishing crawlers in residential IPs.
+% Such move is equal to welcome crawlers to visit.
 
 All in all, with \spartacus deployed and current support from the anti-phishing ecosystem, 
 it is very difficult to bypass all anti-phishing methodologies and allow only potential victim traffic in at the same time.
@@ -24,7 +30,7 @@ Such dilemma forces attackers to either spend resources inventing new evasion te
 
 \section{Limitation}
 
-Even though \spartacus can evade a diverse array of sophisticated phishing websites using server-side cloaking techniques in the wild,
+Even though \spartacus can protect users from a diverse array of sophisticated phishing websites using server-side cloaking techniques in the wild,
 our framework should be considered alongside certain limitations.
 
 
@@ -42,22 +48,40 @@ Therefore, with \spartacus and existing methodologies, the anti-phishing ecosyst
 
 \noindent
 \textbf{HTTP request mutation.}
-As discussed in~\autoref{s:background}, fingerprinting cloaking techniques in phishing server can inspect IP, Hostname, User-Agent, and Referrer to classify whether the visitor is an anti-phishing crawler.
-In \spartacus design, we only consider to mutate User-Agent and Referrer in the HTTP request.
-This is because without permission from server owners, we cannot use their IP and Hostname to route our HTTP request.
-Another reason is that mutating IP addresses means rerouting traffic on the request and response.
-However, such reroute will introduce latency.
-So, it may contain a limitation where \spartacus cannot evade phishing websites that only identify crawlers/bots by IPs and Hostnames.
-However, with our analysis on phishing kits, we found that 83.28\% of phishing kits with fingerprinting cloaking techniques implemented User-Agent checker.
-With the high usage ratio of the User-Agent checker, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
+As discussed in~\autoref{s:background}, fingerprinting cloaking techniques in phishing server can inspect IP, Hostname, User-Agent, Referrer, and other fingerprints to classify whether the visitor is an anti-phishing crawler.
+In \spartacus design, we only consider to mutate User-Agent and Referrer in the HTTP request, along with the leverage of proxy servers.
+% This is because without permission from server owners, we cannot use their IP and Hostname to route our HTTP request.
+% Another reason is that mutating IP addresses means rerouting traffic on the request and response.
+% However, such reroute will introduce latency.
+So, it may contain a limitation where \spartacus cannot evade phishing websites that only identify crawlers/bots by new fingerprints that \spartacus does not mutate.
+One solution for the potential limitation is that we design \spartacus as an extendable framework.
+Even though \spartacus cannot evade phishing websites with potential emerging cloaking techniques in the future,
+the whole anti-phishing ecosystem can contribute to depict the newest fingerprints and patch \spartacus.
+In this case, \spartacus can remain up-to-date to evade new cloaked phishing websites.
+% However, with our analysis on phishing kits, we found that 83.28\% of phishing kits with fingerprinting cloaking techniques implemented User-Agent/Referrer checker.
+% Using proxy server to hide user's IPs, \spartacus also reaches a high evasion rate.
+% With the high usage ratio of the User-Agent checker, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
 % This is because phishers want to block every suspicious visit that may be from anti-phishing infrastructures.
-For the rest 17\% of advanced phishing websites that only inspect IP addresses, they can be trivially detected by anti-phishing systems whose IPs are not in the list.
-Further, the \spartacus framework can be deployed through collaboration of anti-phishing systems and web browsers.
-By that time, it can implement IP mutator to strength the evasion power.
+% For the rest 17\% of advanced phishing websites that only inspect IP addresses, they can be trivially detected by anti-phishing systems whose IPs are not in the list.
+% Further, the \spartacus framework can be deployed through collaboration of anti-phishing systems and web browsers.
+% By that time, it can implement IP mutator to strength the evasion power.
 % And hence the attackers accumulate many criteria to evade crawlers.
 % For example, there are 407 sensitive words phishing kits check to deny request, and one kit blocks as many as 2,827,521 IPs using regular expression.
 % 2,818,048 + 9,472 + 1
 % Therefore, we believe that mutating User-Agent and Referrer is adequate for \spartacus to evade malicious content.
+
+\noindent
+\textbf{Phishing on compromised domains.}
+Phishers may exploit compromised domains selling in the underground forums~\cite{sun2018understanding, sun2021having} to host their malicious websites.
+It may prevent \spartacus from protecting users from phishing on compromised domains.
+One possible mitigation against this limitation is that the domain owner can report compromise to \spartacus and manual effort will be involved to inspect the incident and have \spartacus temporarily mutate the profile when visiting the compromised domain.
+
+
+% \noindent
+% \textbf{User Interaction Cloaking.}
+% Some phishing websites implement User Interaction Cloaking techniques that require users to interact with the website to see phishing content.
+% \spartacus cannot evade such phishing websites because 
+
 
 \subsection{\spartacus Deployment and Evaluation}
 
