@@ -65,8 +65,8 @@ uBlock Origin                   & 100                   & 100                   
 \begin{tabular}{crrrr}
 \toprule
 \textbf{Experiment}         & \multicolumn{1}{c}{\textbf{Tested}} & \multicolumn{1}{c}{\textbf{Passed}} & \multicolumn{1}{c}{\textbf{Blocked}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Different \\ Layout\end{tabular}}} \\ \midrule
-Without Filtering Algorithm & 60,848                              & 60,574                              & 150                                  & 124                                                                                      \\
-With Filtering Algorithm    & 60,848                              & 60,688                              & 29                                  & 39                                                                                       \\ \bottomrule
+W/out~\cref{alg:mutatelogic} & 60,848                              & 60,574                              & 150                                  & 124                                                                                      \\
+W/~\cref{alg:mutatelogic}    & 60,848                              & 60,688                              & 29                                  & 39                                                                                       \\ \bottomrule
 \end{tabular}
 }
 \caption{Coarse-grained experiment result of~\spartacus with and without applying Logic of mutating HTTP profile in~\Cref{alg:mutatelogic}.}
@@ -80,19 +80,19 @@ With Filtering Algorithm    & 60,848                              & 60,688      
 \begin{table}[t]
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{crcrcr}
+\begin{tabular}{cc|rr}
 \toprule
-\multicolumn{2}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Tested \\ Domains\end{tabular}}} & \multicolumn{2}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Testing  \\ Perspective\end{tabular}}} & \multicolumn{2}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Functionality \\ Perspective\end{tabular}}} \\ \midrule
-\multirow{5}{*}{Accessible}                    & \multirow{5}{*}{58}                   & Layout                                             & 58                                      & \multicolumn{2}{c}{-}                                                                             \\ \cline{3-6} 
-                                               &                                       & \multirow{4}{*}{Functionality}                     & \multirow{4}{*}{58}                     & Click buttons                                          & 58                                       \\
-                                               &                                       &                                                    &                                         & Online chat                                            & 3                                        \\
-                                               &                                       &                                                    &                                         & Shopping cart                                          & 5                                        \\
-                                               &                                       &                                                    &                                         & Registration/login                                     & 15/15                                    \\ \midrule
-Not Accessible                                 & 2                                     & \multicolumn{4}{c}{\multirow{2}{*}{-}}                                                                                                                                                           \\ \cline{1-2}
-Total                                          & 60                                    & \multicolumn{4}{c}{}                                                                                                                                                                             \\ \bottomrule
+\multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Evaluation Perspective}}}                                          & \multicolumn{2}{c}{\textbf{Amount}}                  \\
+\multicolumn{2}{c|}{}                                                                                          & \multicolumn{1}{c}{Default} & \multicolumn{1}{c}{SP} \\ \midrule
+\multicolumn{2}{c|}{\textit{Accessibility}}                                                                    & 58                          & 58                     \\ \midrule
+\multicolumn{2}{c|}{\textit{Correct Layout}}                                                                   & 58                          & 58                     \\ \midrule
+\multirow{4}{*}{\textit{\begin{tabular}[c]{@{}c@{}}Proper \\ Functionality\end{tabular}}} & Click Buttons      & 58                          & 58                     \\
+                                                                                          & Online Chat        & 3                           & 3                      \\
+                                                                                          & Shopping Cart Add  & 5                           & 5                      \\
+                                                                                          & Registration/Login & 22/22                       & 22/22                  \\ \bottomrule
 \end{tabular}
 }
-\caption{Fine-grained experiment result of~\spartacus.}
+\caption{Fine-grained experiment result of~\spartacus visit, compared with the result of default browser visit.}
 \label{tab:finegrain}
 % \vspace{10pt}
 \end{table}

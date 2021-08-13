@@ -121,11 +121,15 @@ it is still very important to update its arsenal so that \spartacus can use diff
 Therefore, we conduct another experiment where \spartacus leverages a proxy server residing in Amazon AWS, where crawlers are often from, to visit phishing websites.
 This experiment is to show the effectiveness of a crawler-like IP on evading cloaked phishing websites.
 
-\spartacus visits ABC phishing websites by rerouting the request through the proxy server.
+\newcommand{\proxytotalphishing}{3,487\xspace}
+\newcommand{\proxyevadephishing}{3,253\xspace}
+\newcommand{\proxyphishingperc}{93.28\%\xspace}
+
+\spartacus visits \proxytotalphishing phishing websites by rerouting the request through the proxy server.
 Similar to the evaluation procedure in~\Cref{ss:effectiveness},
 we visit those websites in both default browser and \spartacus browser.
 Then we compare the screenshot and HTML similarity of each phishing website on both sides.
-Among the visited phishing websites, XX\% of them can be evaded by \spartacus through proxy server.
+Among the visited phishing websites, \proxyphishingperc (\proxyevadephishing) of them can be evaded by \spartacus through proxy server.
 Therefore, \spartacus can evade phishing websites that implement IP, User-Agent, or Referrer cloaking.
 Phishers may design emerging cloaking techniques in the future, but we design \spartacus as an extendable framework.
 Additional fingerprints can be added into the existing framework to make it more evasive against cloaked phishing websites.
