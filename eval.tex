@@ -95,22 +95,27 @@ Because the web page content returned through \spartacus's visit does not contai
 According to the design, the profile mutator of \spartacus selects one of 407 triggering words, following the order of their popularity in examined phishing kits.
 So in this section, we evaluate the effectiveness of each triggering word on triggering fingerprinting cloaking techniques in phishing websites.
 
+\newcommand{\senstotalphishing}{916\xspace}
+\newcommand{\sensevadephishing}{725\xspace}
+
 We test all the triggering words by appending each after the User-Agent string within \spartacus and then visiting the same phishing website.
 Similarity to the evaluation of effectiveness of \spartacus, we also visit the website using a default browser as a comparison.
-We conduct the experiment on 916 phishing websites.
-Except ABC websites that show same content on all HTTP profiles,
-DEF ones show web page differently between \spartacus'ed browser and default browser.
+We conduct the experiment on \senstotalphishing phishing websites.
+% Except \sensevadephishing websites that show same content on all HTTP profiles,
+\senstotalphishing ones show web page differently at least under one triggering word between \spartacus'ed browser and default browser.
 
-In DEF cloaked phishing websites, the triggering words have different evasion abilities.
-Table X is the result of top 10 effective triggering words evading phishing content in \spartacus.
-In the table, word XYZ has the most evasion record.
-X\% of the cloaked phishing websites can be evaded by appending XYZ in the User-Agent using \spartacus.
-Compared with the rank in~\autoref{tab:topsenswords}, it is X-th word in the list.
-The high effectiveness of word XYZ confirms its high rank in the top used blocked words in the phishing kits.
-Similarly, top effective words such as XXX, ZZZ, and YYY also have a high usage in phishing kits.
-On the other hand, word XYZ and XXX combined can make all tested cloaked phishing websites return benign content to users.
+\evalsenswords
 
-The evaluation result shows that our triggering word list can evade phishing websites with fingerprinting cloaking techniques.
+In \senstotalphishing cloaked phishing websites, the triggering words have different evasion abilities.
+\autoref{tab:evalsenswords} is the result of top 10 effective triggering words evading phishing content in \spartacus.
+In the table, word \texttt{bot} has the most evasion record.
+99.31\% of the cloaked phishing websites can be evaded by appending \texttt{bot} in the User-Agent using \spartacus.
+Compared with the rank in~\autoref{tab:topsenswords}, it is ranked first blocked word appearance in examined phishing kits.
+The high effectiveness of this word confirms its high rank in the top used blocked words in the phishing kits.
+Similarly, top effective words such as ``amazonaws'', ``phishtank'', and ``google'' also have a high usage in phishing kits.
+On the other hand, word ``bot'' and ``amazonaws'' combined can make all tested cloaked phishing websites return benign content to users.
+
+The evaluation result shows that our triggering word list can effectively evade phishing websites with fingerprinting cloaking techniques.
 Furthermore, it indicates that a small number of triggering words can evade a myriad of cloaked phishing websites.
 
 

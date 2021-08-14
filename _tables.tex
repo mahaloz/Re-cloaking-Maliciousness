@@ -23,7 +23,7 @@
 \newcommand{\exthouse}{
 \begin{table*}[t]
 \centering
-\resizebox{.9\linewidth}{!}{
+\resizebox{\linewidth}{!}{
 \begin{tabular}{crrrrrrrrrrrr}
 \toprule
                                 & \multicolumn{2}{c}{\textbf{Score}}            & \multicolumn{2}{c}{\textbf{FID $\Delta$ (ms)}}   & \multicolumn{2}{c}{\textbf{Scripting $\Delta$ (ms)}} & \multicolumn{2}{c}{\textbf{TTI (ms)}}           & \multicolumn{2}{c}{\textbf{Added Long Task (ms)}} & \multicolumn{2}{c}{\textbf{Extra CPU Time (ms)}} \\
@@ -135,6 +135,28 @@ compatible              & 432                                 & amazonaws       
 \caption{Top 10 sensitive word appearance in \totalphishingkit examined phishing kits~\cite{phishunt}.} 
 
 \label{tab:topsenswords}
+% \vspace{-10pt}
+\end{table}
+}
+
+
+\newcommand{\evalsenswords}{
+\begin{table}[]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{crcr}
+\toprule
+\textbf{Triggering Word} & \multicolumn{1}{c}{\textbf{Count}} & \textbf{Triggering Word} & \multicolumn{1}{c}{\textbf{Count}} \\ \midrule
+bot                      & 720                                & atn                      & 717                                \\
+amazonaws                & 718                                & curl                     & 717                                \\
+phishtank                & 718                                & facebook                 & 716                                \\
+dwcp                     & 717                                & crawler                  & 716                                \\
+google                   & 717                                & katipo                   & 713                                \\ \bottomrule
+\end{tabular}
+}
+\caption{Top 10 triggering words that can evade phishing content.} 
+
+\label{tab:evalsenswords}
 % \vspace{-10pt}
 \end{table}
 }
