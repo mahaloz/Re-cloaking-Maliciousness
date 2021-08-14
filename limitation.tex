@@ -19,6 +19,14 @@ However, using CAPTCHA will bring poor user experience, which may lower phishers
 Secondly, it does not distinguish real users from anti-phishing crawlers because every visitor needs to solve the puzzle~\cite{captcha}.
 Recently, researchers have proposed methodologies bypassing it~\cite{sivakorn2016m,stark2015captcha, zhang2021crawlphish}.
 
+Instead of modifying cloaking techniques in the phishing websites,
+phishers can attack and compromise the \spartacus framework.
+After getting control of \spartacus, phishers can restrict the extension to use a specific mutation for their phishing websites and dynamically update cloaking conditions to allow visits from that mutation.
+However, this methodology is not practical.
+Firstly, it requires phishers to have advanced knowledge of hacking and attacking.
+Furthermore, it is time and resource consuming because to make sure that potential victims can see phishing content, attackers have to compromise \spartacus on every user's side.
+On \spartacus's side, we can reinforce the framework by embedding self sanity check to inspect any malfunctioning and warn users if so.
+
 % At last, phishers can loose the evasion criteria, such as by only checking IP and Hostnames.
 % Anti-phishing infrastructures can learn the lesson and set up the anti-phishing crawlers in residential IPs.
 % Such move is equal to welcome crawlers to visit.
@@ -103,15 +111,15 @@ Besides, we have tested \spartacus on over 130,000 live phishing websites and ve
 Therefore, we believe such limitation can be mitigated to the extent of our best effort.
 
 \noindent
-\textbf{Fingerprinting knowledgebase.}
+\textbf{Fingerprinting Database.}
 In the deployment of \spartacus, we stored the record of suspicious URLs locally when users visit them.
 We also uploaded the local copy to merge with the records in the server and downloaded the newest list from the server periodically (once a day).
-This may cause a restriction in the large scale deployment: users may not always have the up-to-date fingerprinting knowledgebase, and their local mutation history may not be shared with other users in time.
+This may cause a restriction in the large scale deployment: users may not always have the up-to-date Fingerprinting Database, and their local mutation history may not be shared with other users in time.
 One mitigation is that \spartacus can follow the trajectory of Google Safe Browsing when it is deployed in practice.
-There is a local and backend fingerprinting knowledgebase as before, and the knowledgebase is updated periodically.
-When \spartacus cannot find any record in the knowledgebase, it can query the backend server using the first 32 bit of hash.
+There is a local and backend Fingerprinting Database as before, and it is updated periodically.
+When \spartacus cannot find any record in the Fingerprinting Database, it can query the backend server using the first 32 bit of hash.
 If a hit, \spartacus will use or avoid certain profiles;
 otherwise \spartacus will mutate the profile as usual.
-Therefore, users in practice can get up-to-date mutation records if there is a miss in the local knowledgebase, although with a trade-off: the latency waiting for the server query.
+Therefore, users in practice can get up-to-date mutation records if there is a miss in the local Fingerprinting Database, although with a trade-off: the latency waiting for the server query.
 % In the evaluation of \spartacus's effectiveness, we determine the returned web page content as benign if (1) the server returns error code or redirects the visit to a benign domain and (2) an external inspector examines the features in returned content and does not find maliciousness.
 % In the latter one, there may contain a limitation where \spartacus cannot evade phishing websites with client-side cloaking techniques 
