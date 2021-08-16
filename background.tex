@@ -19,7 +19,10 @@ Typically, phishing websites with evasion display benign web page content if the
 There are two categories of cloaking techniques, namely server-side and client-side (\autoref{tab:cloakingtypes} shows categories of each type).
 Client-side evasion techniques distinguish visitors to display different web page content by executing JavaScript snippets in user's browser~\cite{zhang2021crawlphish}.
 Server-side cloaking techniques, on the other hand, identify visits from anti-phishing systems through information in HTTP requests~\cite{oest2018inside, invernizzi2016cloak}.
-Typically, server-side cloaking is also known as fingerprinting cloaking, including network, browser, and context~\cite{invernizzi2016cloak}.
+Typically, 
+one popular implementation of server-side cloaking is Fingerprinting cloaking,
+% server-side cloaking is also known as fingerprinting cloaking, 
+including network, browser, and context~\cite{invernizzi2016cloak, oest2018inside}.
 \autoref{fig:fp_cloaking} shows how fingerprinting cloaking techniques are used in phishing websites.
 Cloaking code embedded in the phishing server fingerprints the profile in the HTTP request and responds different web page content based on the identification of visitors (as either potential victims or anti-phishing crawlers).
 
@@ -29,7 +32,7 @@ Only when anti-phishing systems retrieve phishing content, can they classify phi
 
 However, as the development of phishing kits, the size of blocklist in the phishing kit can increase.
 As shown in~\autoref{fig:servercloaking}, any match of the IP address, hostname, or User-Agent in the blocklist will result in an error web page, such as \texttt{404 Page Not Found}.
-Hence, anti-phishing systems can trigger fingerprinting cloaking techniques in the phishing server easily.
+Hence, visits from anti-phishing systems can trigger fingerprinting cloaking techniques in the phishing server easily.
 As a result, they cannot properly retrieve phishing web page content, which leads to a mis-classification.
 Moreover, according to the analysis from Oest et al.~\cite{oest2020sunrise}, it takes anti-phishing crawlers an average of six hours to mark a sophisticated phishing website as malicious.
 The duration is even longer till the last victim visit (18 hours).

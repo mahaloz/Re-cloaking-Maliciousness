@@ -9,7 +9,8 @@
 % \vspace{-10pt}
 \end{figure}
 
-To understand the prevalence of cloaking techniques used in advanced phishing kits,
+Oest et al.~\cite{oest2018inside} in 2018 analyzed \emph{.htaccess} files in phishing kits and demonstrated that fingerprinting cloaking is very popular in phishing.
+To further verify the prevalence of cloaking techniques used in advanced phishing kits,
 we first manually inspect 56 phishing kits, 
 which is randomly chosen 10.93\% from a dataset of~\emph{phishunt.io}~\cite{phishunt},
 and extract common patterns how fingerprinting cloaking techniques are implemented in phishing kits.
@@ -22,7 +23,7 @@ Among the inspected kits in~\emph{phishunt.io}~\cite{phishunt} from May 2020 to 
 To comprehensively measure the prevalence of server-side fingerprinting cloaking techniques in phishing kits,
 we also run our pattern finding script on Cisco's dataset that is contributed to Virus Total.
 In total, all of 2,421 phishing kits from Cisco's dataset contain such evasion.
-Among them, 1,983 of the advanced phishing kits contain User-Agent checker.
+Among them, 1,983 of the advanced phishing kits contain User-Agent checker, and 1,660 contain IP filter.
 % Preliminarily, 100 out of 100 phishing kits from Cisco's dataset contain such evasion.
 % , while only one implements server-side click-through cloaking.
 
