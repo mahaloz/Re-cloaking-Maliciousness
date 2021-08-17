@@ -70,7 +70,7 @@ The logic is shown in~\Cref{alg:mutatelogic}.
 
 \If{\State ($reputation(u)~\leq Neutral$) \texttt{and}
 \State ($duration(u)~\geq 1,501$) \texttt{or} 
-\State ($d.domain$ NOT in top reviewed sub-domains)}
+\State ($u.domain$ NOT in top reviewed sub-domains)}
     \State $p = mutate\_http\_profile(p)$
 \EndIf
 
@@ -235,7 +235,7 @@ If \spartacus makes the decision to mutate the profile, it also needs the \emph{
 % \noindent
 (2)~\emph{HTTP profile used in the request}:
 After \spartacus decides to mutate the user's HTTP profile before visiting a suspicious website, it requires the user's profile to modify it.
-The privacy information in the profile includes the User-Agent string, where browser version, browser type, and operating system information reside, and the Referer, which implies where the user comes from.
+The privacy information in the profile includes the User-Agent string, where browser version, browser type, and operating system information reside, and the Referrer, which implies where the user comes from.
 By accessing the profile, \spartacus can modify the fingerprints that phishers identify as anti-phishing crawlers to camouflage users.
 
 % \noindent
@@ -248,7 +248,8 @@ The inspection result marks the corresponding profile mutation successful or not
 
 (4)~\emph{URL and profile share}:
 \spartacus at last uploads the \emph{hashed} URL and the inspection result along with the corresponding HTTP profile to the server.
-In the database, we only store the triggering word \spartacus uses, whether to blank Referrer, and which proxy server to reroute.
+In the database, we only store 
+the triggering word \spartacus uses, whether to blank Referrer, and which proxy server to reroute.
 We do not save any user-related information in the Fingerprinting Database.
 When other users visit the same URL, the successful mutation will be shared to them.
 If there is no successful variant, \spartacus will avoid to use the unsuccessful ones to mutate.
@@ -275,6 +276,6 @@ Secondly, when the URL and its corresponding HTTP profile is transferred to the 
 it is hashed first and uploaded to the server.
 Lastly, when other users look up existing records from the server,
 their URL is also hashed first and looked up in the database in hash version.
-Furthermore, what they receive from the Fingerprinting Database is whether specific sensitive words can evade maliciousness.
-They will not know who exactly ever visited the website.
-And hence, the privacy of the user can be protected.
+Furthermore, what users receive from the Fingerprinting Database is whether specific triggering words, Referrer, or proxy server IP can evade maliciousness.
+They will not know who else exactly ever visited the website.
+And hence, the privacy of users can be protected.

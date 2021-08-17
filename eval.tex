@@ -1,6 +1,6 @@
-\newcommand{\proxytotalphishing}{6,350\xspace}
-\newcommand{\proxyevadephishing}{6,136\xspace}
-\newcommand{\proxyphishingperc}{96.62\%\xspace}
+\newcommand{\proxytotalphishing}{8,474\xspace}
+\newcommand{\proxyevadephishing}{7,540\xspace}
+\newcommand{\proxyphishingperc}{88.98\%\xspace}
 
 
 \section{Evaluation}
@@ -8,8 +8,8 @@
 
 We implement \spartacus as a Chrome browser extension, which the anti-phishing ecosystem can leverage and spread trivially.
 We deploy the prototype locally in three machines.
-We did not conduct user study for \spartacus because we simulate the user's environment from our side.
-and evaluate it from three perspectives, including effectiveness, latency, and potential impact on benign websites.
+We did not conduct user study for \spartacus because we can simulate the user's environment from our side.
+The evaluation of \spartacus contains three perspectives, including effectiveness, latency, and potential impact on benign websites.
 These three aspects demonstrate the feasibility of the \spartacus framework in practice because it can successfully evade advanced phishing websites, can negligibly introduce latency to the users when visiting websites, and can run in the backstage without causing errors on benign websites.
 
 \noindent
@@ -87,11 +87,11 @@ On the other hand,
 when \spartacus mutates the HTTP profile,
 the phishing server considers the visit as from an anti-phishing infrastructure.
 Thus, it denies the request from \spartacus and an error web page is shown as~\autoref{fig:sp1}.
-On the other hand, advanced phishing servers can redirect visit to a benign domain with status code of 200 instead of returning an error page.
+On the other hand, advanced phishing servers can redirect visit to a benign domain instead of returning an error page.
 In this way, \spartacus'ed browser will receive web page contents such as~\autoref{fig:sp2},
 which also indicates a successful evasion.
 
-The evaluation result shows that \spartacus can impersonate users as anti-phishing crawler and trigger the cloaking techniques of advanced phishing websites.
+The evaluation result shows that \spartacus can impersonate users as anti-phishing crawler and effectively trigger the cloaking techniques of advanced phishing websites.
 Because the web page content returned through \spartacus's visit does not contain any maliciousness, Internet users will not be trapped in the attack.
 
 
