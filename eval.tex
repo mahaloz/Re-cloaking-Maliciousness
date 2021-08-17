@@ -1,10 +1,12 @@
-
+\newcommand{\proxytotalphishing}{3,487\xspace}
+\newcommand{\proxyevadephishing}{3,253\xspace}
+\newcommand{\proxyphishingperc}{93.28\%\xspace}
 
 
 \section{Evaluation}
 \label{s:eval}
 
-We implement the front and back end of \spartacus as a Chrome browser extension, which the anti-phishing ecosystem can leverage and spread trivially.
+We implement \spartacus as a Chrome browser extension, which the anti-phishing ecosystem can leverage and spread trivially.
 We deploy the prototype locally in three machines.
 We did not conduct user study for \spartacus because we simulate the user's environment from our side.
 and evaluate it from three perspectives, including effectiveness, latency, and potential impact on benign websites.
@@ -18,6 +20,7 @@ In our evaluation, we use two different datasets, a malicious one, to test the e
 (1)~\emph{APWG Dataset}:
 For the effectiveness evaluation, \spartacus visits 160,728 live phishing websites from November 2020 to July 2021 using Anti-Phishing Working Group (APWG) URL feed~\cite{ecrimeexchange},
 which is a curated dataset for reported phishing URLs, supported by a large number of collaborated members.
+Additionally, we leverage another~\proxytotalphishing live phishing websites in the APWG Dataset to evaluate the effectiveness of IP mutation.
 
 \noindent
 (2)~\emph{Benign Dataset}:
@@ -64,7 +67,7 @@ To evaluate the potential impact on benign websites, \spartacus leverages a data
 \end{figure*}
 
 We evaluate the effectiveness of \spartacus automatically by conducting an experiment where we visit same phishing websites with different configurations of browsers, one with default user setting, the other with \spartacus to mutate the profile.
-We simulate the default setting browser as normal users and the one with \spartacus as users with our system.
+We simulate the default setting browser as normal users and the one with \spartacus as users with our framework.
 The phishing URLs both browsers visit are from the APWG Dataset.
 For each visit, we record the final landing web page content and URL.
 Either a legitimate final URL or a non-malicious web page content indicates the success of \spartacus evading phishing content for users.
@@ -79,14 +82,16 @@ We consider an HTTP response benign if (1) its web page content does not contain
 or (2) the destination domain is legitimate, excluding web hosting service domains.
 \autoref{fig:effectiveness} demonstrates the difference of response web page content between default and \spartacus'ed browser visit for a cloaked phishing websites.
 The content in~\autoref{fig:normal} shows the phishing content when a real person visits it.
-On the other hand, when \spartacus appends a bot-looking string to the existing User-Agent, such as~\emph{bot}, the phishing server considers the visit as from an anti-phishing infrastructure.
+On the other hand, 
+% when \spartacus appends a bot-looking string to the existing User-Agent, such as~\emph{bot},
+when \spartacus mutates the HTTP profile,
+the phishing server considers the visit as from an anti-phishing infrastructure.
 Thus, it denies the request from \spartacus and an error web page is shown as~\autoref{fig:sp1}.
-On the other hand, advanced phishing servers can redirect visit to a benign domain with status code of 200 instead of returning an error.
+On the other hand, advanced phishing servers can redirect visit to a benign domain with status code of 200 instead of returning an error page.
 In this way, \spartacus'ed browser will receive web page contents such as~\autoref{fig:sp2},
-which also indicates a successful evasion 
-from \spartacus.
+which also indicates a successful evasion.
 
-It shows that \spartacus can impersonate anti-phishing crawler and trigger the cloaking techniques of advanced phishing websites.
+The evaluation result shows that \spartacus can impersonate users as anti-phishing crawler and trigger the cloaking techniques of advanced phishing websites.
 Because the web page content returned through \spartacus's visit does not contain any maliciousness, Internet users will not be trapped in the attack.
 
 
@@ -104,14 +109,14 @@ We test all the triggering words by appending each after the User-Agent string w
 Similarity to the evaluation of effectiveness of \spartacus, we also visit the website using a default browser as a comparison.
 We conduct the experiment on \senstotalphishing phishing websites.
 % Except \sensevadephishing websites that show same content on all HTTP profiles,
-\senstotalphishing ones show web page differently at least under one triggering word between \spartacus'ed browser and default browser.
+\sensevadephishing show web page differently at least under one triggering word between \spartacus'ed browser and default browser.
 
 \evalsenswords
 
-In \senstotalphishing cloaked phishing websites, the triggering words have different evasion abilities.
+In \sensevadephishing cloaked phishing websites, the triggering words have different evasion abilities.
 \autoref{tab:evalsenswords} is the result of top 10 effective triggering words evading phishing content in \spartacus.
-In the table, word \texttt{bot} has the most evasion record.
-99.31\% of the cloaked phishing websites can be evaded by appending \texttt{bot} in the User-Agent using \spartacus.
+In the table, word \emph{bot} has the most evasion record.
+99.31\% of the cloaked phishing websites can be evaded by appending \emph{bot} in the User-Agent using \spartacus.
 Compared with the rank in~\autoref{tab:topsenswords}, it is ranked first blocked word appearance in examined phishing kits.
 The high effectiveness of this word confirms its high rank in the top used blocked words in the phishing kits.
 Similarly, top effective words such as ``amazonaws'', ``phishtank'', and ``google'' also have a high usage in phishing kits.
@@ -128,9 +133,6 @@ it is still very important to update its arsenal so that \spartacus can use diff
 Therefore, we conduct another experiment where \spartacus leverages a proxy server residing in Amazon AWS, where crawlers are often from, to visit phishing websites.
 This experiment is to show the effectiveness of a crawler-like IP on evading cloaked phishing websites.
 
-\newcommand{\proxytotalphishing}{3,487\xspace}
-\newcommand{\proxyevadephishing}{3,253\xspace}
-\newcommand{\proxyphishingperc}{93.28\%\xspace}
 
 \spartacus visits \proxytotalphishing phishing websites by rerouting the request through the proxy server.
 Similar to the evaluation procedure in~\Cref{ss:effectiveness},
@@ -243,7 +245,8 @@ The difference is due to the shape of buttons and different of background color.
 % When the screenshot was captured in default visit, Ad One happened to show;
 % and another Ad was in the way when \spartacus took the screenshot.
 Similarly, in~\autoref{fig:2306}, a window popped up to ask for the permission of cookie in default browser, but did not in \spartacus's visit.
-The cookie request pop-up is missing in \spartacus browser, not due to the extension itself, but because we visit the same website 10 times in different browsers without \spartacus, only for 3 times the pop-up appeared.
+The cookie request pop-up missing in \spartacus browser is not due to the extension itself.
+We visit the same website 10 times in different browsers without \spartacus, only for three times the pop-up appeared.
 Even though our evaluation script can distinguish the difference between visits from two browsers,
 users will not perceive that.
 They can normally interact with the websites with \spartacus providing phishing-evading services.
@@ -254,9 +257,10 @@ They can normally interact with the websites with \spartacus providing phishing-
 
 With applying~\Cref{alg:mutatelogic}, we evaluated \spartacus based on the threshold and find that 29 legitimate domains show different web page content on default and \spartacus'ed browsers, as listed in~\autoref{tab:coarsegrain}.
 Hence, only 0.04\% of 60,848 domains are falsely evaded.
-It is because the 29 domains do not fall into the high reputation group of \spartacus's non-mutation criteria.
+It is because the 29 domains do not meet the trustworthiness requirements and hence are not trusted by \spartacus.
+% do not fall into the high reputation group of \spartacus's non-mutation criteria.
 As one possible mitigation, we provide a channel for users to report falsely evaded websites.
-Once receiving the report, we will conduct manual inspection and whitelist the false-positives.
+Once receiving the report, we will conduct manual inspection and trust the false-positives.
 % Additionally, 39 of the domains show different layouts between default and \spartacus browsers.
 % As we discussed above, such difference will not affect the activities of normal users,
 % but after applying~\Cref{alg:mutatelogic}, \spartacus and normal browsers perform more alike on benign domains.
@@ -270,7 +274,7 @@ As comparison, phishing URLs can still be evaded through \spartacus because they
 In Fine-Grained experiment, we aim to exercise and evaluate the operation of websites visited through \spartacus.
 It was inspired by the methodology used by Snyder et al.~\cite{snyder2017most} and Trickel et al.~\cite{trickel2019everyone}.
 This methodology concentrates on the operation of a website from the perspective of the user.
-Even though \spartacus may introduce an error to a website while users do not perceive any difference when browsing, then we consider that \spartacus does not impact negatively on the website.
+Even though \spartacus may introduce an error to a website, the users do not perceive any difference when browsing, then we consider that \spartacus does not impact negatively on the website.
 % evaluate potential impact \spartacus brings on the functionalities of benign domains.
 This method of evaluation focuses more on potential impact \spartacus brings on the functionalities of benign domains than how \spartacus works.
 And it was performed by the authors manually.
@@ -281,7 +285,7 @@ There are four steps in the experiment.
 (1) We open legitimate domains in a browser with \spartacus installed and also in one with default settings.
 (2) We inspect the accessibility of the website, similar to the Coarse-Grained experiment.
 (3) After the success of web page content retrieval, we compare the layouts between different visit.
-(4) We interact with links, buttons, and other activities such as register/login, online chat, or shopping to make sure that their functionalities perform correctly.
+(4) We interact with links, buttons, and other activities such as register/login, online chat, or shopping to make sure that the functionalities in a website perform correctly.
 (5) At last, we test the authentication functionality to make sure that \spartacus extension will not impact it.
 
 We randomly selected 60 domains from Alexa Top One Million List, especially 20 every 200 thousands.
