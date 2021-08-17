@@ -7,7 +7,7 @@ Because \spartacus focuses on the evasion of phishing attacks with server-side c
 there may be a countermeasure that attackers can use other types of phishing websites to harm individuals and organizations.
 
 Phishers can use basic phishing websites, phishing websites with client-side cloaking, or those with User Interaction Cloaking (e.g., CAPTCHAs).
-As we discussed above and analysis result from Oest et al.~\cite{oest2020phishtime}, basic phishing websites can be detected and blacklist by anti-phishing systems as fast as 28 minutes.
+As we discussed above and analysis result from Oest et al.~\cite{oest2020phishtime}, basic phishing websites can be detected and blacklisted by anti-phishing systems as fast as 28 minutes.
 Distributing basic phishing websites cannot help phishers maximize their return-on-investment.
 As for client-side cloaking techniques,
 phisher can implement them into their websites to bypass \spartacus.
@@ -17,7 +17,7 @@ At last, phishers can set up a CAPTCHA web page as a barrier before showing phis
 This can bypass the evasion from~\spartacus.
 However, using CAPTCHA will bring poor user experience, which may lower phishers profit because it is time consuming and challenging for potential victims~\cite{captcha}.
 Secondly, it does not distinguish real users from anti-phishing crawlers because every visitor needs to solve the puzzle~\cite{captcha}.
-Recently, researchers have proposed methodologies bypassing it~\cite{sivakorn2016m,stark2015captcha, zhang2021crawlphish}.
+Recently, researchers have proposed methodologies bypassing it~\cite{sivakorn2016m,stark2015captcha, zhang2021crawlphish}, which further lowers the return-on-investment of phishers by implementing such technique.
 
 Instead of modifying cloaking techniques in the phishing websites,
 phishers can attack and compromise the \spartacus framework.
@@ -33,7 +33,7 @@ On \spartacus's side, we can reinforce the framework by embedding self sanity ch
 
 All in all, with \spartacus deployed and current support from the anti-phishing ecosystem, 
 it is very difficult to bypass all anti-phishing methodologies and allow only potential victim traffic in at the same time.
-Such dilemma forces attackers to either spend resources inventing new evasion techniques, or quit phishing due to little profit.
+Such dilemma forces attackers to either spend resources inventing new evasion techniques, or quit phishing due to low profit.
 
 
 \section{Limitation}
@@ -48,7 +48,8 @@ our framework should be considered alongside certain limitations.
 \textbf{Phishing Classification.}
 The \spartacus framework is not a phishing classification system.
 Rather, it camouflages users as security crawlers when they visit suspicious websites with cloaking techniques and can evade malicious content if they contain.
-The reason why \spartacus cannot classify its maliciousness is because it does not need to.
+It protects users from the client side in nearly real time.
+% The reason why \spartacus cannot classify its maliciousness is because it does not need to.
 As evaluated in~\autoref{s:eval}, \spartacus can evade 82.28\% of phishing websites in real time, while has a negligible impact on benign websites.
 Previous work has proposed methodologies classifying phishing websites with high accuracy~\cite{whittaker2010large, lin2021phishpedia}.
 Therefore, with \spartacus and existing methodologies, the anti-phishing ecosystem can cover a wider range of phishing attacks.
@@ -57,14 +58,14 @@ Therefore, with \spartacus and existing methodologies, the anti-phishing ecosyst
 \noindent
 \textbf{HTTP request mutation.}
 As discussed in~\autoref{s:background}, fingerprinting cloaking techniques in phishing server can inspect IP, Hostname, User-Agent, Referrer, and other fingerprints to classify whether the visitor is an anti-phishing crawler.
-In \spartacus design, we only consider to mutate User-Agent and Referrer in the HTTP request, along with the leverage of proxy servers.
+In \spartacus design, we consider to mutate User-Agent and Referrer in the HTTP request, along with the leverage of proxy servers.
 % This is because without permission from server owners, we cannot use their IP and Hostname to route our HTTP request.
 % Another reason is that mutating IP addresses means rerouting traffic on the request and response.
 % However, such reroute will introduce latency.
 So, it may contain a limitation where \spartacus cannot evade phishing websites that only identify crawlers/bots by new fingerprints that \spartacus does not mutate.
 One solution for the potential limitation is that we design \spartacus as an extendable framework.
 Even though \spartacus cannot evade phishing websites with potential emerging cloaking techniques in the future,
-the whole anti-phishing ecosystem can contribute to depict the newest fingerprints and patch \spartacus.
+the whole anti-phishing ecosystem can contribute to depict the newest fingerprints and upgrade \spartacus.
 In this case, \spartacus can remain up-to-date to evade new cloaked phishing websites.
 % However, with our analysis on phishing kits, we found that 83.28\% of phishing kits with fingerprinting cloaking techniques implemented User-Agent/Referrer checker.
 % Using proxy server to hide user's IPs, \spartacus also reaches a high evasion rate.
@@ -104,7 +105,7 @@ We believe that such analysis can describe its prevalence preliminarily to indic
 \noindent
 \textbf{Data collection.}
 We select APWG dataset to evaluate the effectiveness of \spartacus.
-And due to infrastructure and resource limitations, we were only able to test \spartacus over a total of nine months from November 2020 to July 2021.
+And due to infrastructure and resource limitations, we were only able to test \spartacus over total of nine months from November 2020 to July 2021.
 Even though additional data crawling would be desirable to evaluate \spartacus,
 the APWG dataset can provide the breadth of phishing data collection because it contains different types of phishing websites targeting different brands, which are submitted periodically by collaborating members including anti-phishing systems and financial organizations impersonated by phishing websites.
 Besides, we have tested \spartacus on over 130,000 live phishing websites and verified that it can evade malicious content.
