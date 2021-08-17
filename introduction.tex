@@ -1,38 +1,49 @@
 \section{Introduction}
-
-The security community has made efforts researching on phishing attacks,
-but attackers still make profits using phishing websites and continuously harm the victims they target and the organizations they mimic~\cite{ho2019detecting, van2019cognitive}.
+\label{s:intro}
+Albeit the security community has made huge efforts on phishing attacks,
+relentless attackers still launch a ton of phishing websites~\cite{ho2019detecting, van2019cognitive}.
 According to Google Transparency report, phishing attacks have replaced online malware to be the most prevalent web-based threat~\cite{googletransparencyreport, solutions2019verizon}.
-Nowadays, phishing websites continue to grow in sophistication and hence can bypass modern defensive methodologies.
-Therefore, the current anti-phishing ecosystem leaves advanced phishing websites ``golden hours'' to damage the whole Internet community~\cite{oest2020sunrise}.
+Furthermore, phishing websites are continuously growing in sophistication to bypass modern anti-phishing techniques.
+Consequently, the current anti-phishing ecosystem leaves advanced phishing websites ``golden hours'' to damage the whole Internet community~\cite{oest2020sunrise}.
+% harm victims and organizations that they target using phishing websites~\cite{ho2019detecting, van2019cognitive}.
+% Nowadays, phishing websites continue to grow in sophistication and hence can bypass modern defensive methodologies.
+% Therefore, the current anti-phishing ecosystem leaves advanced phishing websites ``golden hours'' to damage the whole Internet community~\cite{oest2020sunrise}.
 
-Phishing websites adopt \emph{evasion} techniques to delay or evade detection by automated anti-phishing systems in the cat-and-mouse game,
-which contribute to maximize phishers' return-on-investment~\cite{thomas2017data}.
+To delay or evade detection from automated anti-phishing systems, advanced phishing websites exploit \emph{evasion} techniques so that attackers can maximize their profit~\cite{thomas2017data}.
+% , in the cat-and-mouse game
+% which contributes to maximize phishers' return-on-investment~\cite{thomas2017data}.
 The evasion techniques, also known as~\emph{cloaking}, 
 % implemented in phishing websites, 
 attempt to distinguish the visits from potential victims out of those from anti-phishing crawlers.
-The cloaking techniques include two categories: server-side~\cite{oest2018inside} and client-side~\cite{zhang2021crawlphish}.
-Server-side cloaking techniques reside in phishing servers and perform based on the HTTP request. 
-Among them, many phishing kits implement fingerprinting cloaking, to identify visits through the items in the request, such as IP, User-Agent, and Referrer~\cite{oest2018inside}.
-The client-side ones take into effect based on the execution of JavaScript in user's browser.
-The cloaking techniques show real phishing content to visitors who they decide as ``real human,'' while display a benign-looking web page to those who are identified as ``anti-phishing crawler.''
-The damage brought by these phishing websites' efforts is not only that they steal just account numbers and passwords,
-but that the phishing websites nowadays try to dump all information including victim's identity~\cite{thomas2017data}.
-Thus, the cloaked phishing websites cause a wider damage to the whole society and are very difficult to effectively and efficiently mitigate~\cite{oest2020sunrise, zhang2021crawlphish}.
+The cloaking techniques can be categorized by two groups: server-side ones~\cite{oest2018inside} and client-side ones~\cite{zhang2021crawlphish}.
+Server-side cloaking techniques identify potential victim visits based on the HTTP request.
+% and perform based on the HTTP request. 
+Most of them are fingerprinting-based cloaking techniques which use IP addresses, User-Agent, and Referrer to identify visitors~\cite{oest2018inside}.
+% Among them, many phishing kits implement fingerprinting cloaking, to identify visits through the items in the request, such as IP, User-Agent, and Referrer~\cite{oest2018inside}.
+On the other hand, the client-side ones identify visitors by using execution results of various JavaScript code in users' browsers.
+% On the other hand, the client-side ones take into effect based on the execution of JavaScript in user's browser.
+These cloaking techniques show phishing content to visitors who they decide as a ``real human,'' while display a benign-looking web page to those who are identified as an ``anti-phishing crawler.''
+% The damage brought by these phishing websites' efforts is not only that they steal just account numbers and passwords,
+% but that the phishing websites nowadays try to dump all information including victim's identity~\cite{thomas2017data}.
+% Thus, the cloaked phishing websites cause a wider damage to the whole society and are very difficult to effectively and efficiently mitigate~\cite{oest2020sunrise, zhang2021crawlphish}.
+% According to Oest et al.~\cite{oest2020sunrise}, 
+Phishing websites using such sophisticated evasive techniques cause substantial monetary damage to both users and businesses~\cite{oest2020sunrise}.
+% Thus, the cloaked phishing websites cause a wider damage to the whole society and are very difficult to effectively and efficiently mitigate~\cite{oest2020sunrise, zhang2021crawlphish}.
+Therefore, thwarting phishers' evasion efforts is of great importance, but is very difficult to effectively and efficiently mitigate~\cite{oest2020sunrise, zhang2021crawlphish}.
+% , thus, treated by the anti-phishing ecosystem as a very important issue.
 
-According to Oest et al.~\cite{oest2020sunrise}, such sophisticated phishing websites cause majority of real-world harm.
-Thwarting phishers' evasion efforts is, thus, treated by the anti-phishing ecosystem as a very important issue.
-Currently, they think that correct web page retrieval and timely detection is the key to successful mitigation~\cite{oest2020sunrise, zhang2021crawlphish}.
-Following this trajectory, prior research has proposed methodologies categorizing and mitigating cloaking techniques in phishing~\cite{oest2018inside, oest2019phishfarm, zhang2021crawlphish}.
-However, the server-side cloaking techniques can still defeat key ecosystem defenses such as blacklist-based mechanism~\cite{oest2019phishfarm}.
-With so many filtering conditions in the cloaking techniques,
-it is very difficult for the content-based anti-phishing systems to acquire real phishing content in a large scale~\cite{oest2018inside, oest2020phishtime},
-because anti-phishing systems need to enumerate countless HTTP profiles to visit the phishing websites, in order not to bypass the cloaking techniques.
-In this way, phishers can still be beneficial from the cloaking techniques.
+% Currently, they think that correct web page retrieval and timely detection is the key to successful mitigation~\cite{oest2020sunrise, zhang2021crawlphish}.
+% Following this trajectory, 
+Ideally, we have believed that timely detection of phishing websites is the key to successful mitigation~\cite{oest2020sunrise, zhang2021crawlphish}.
+Hence, to protect users from advanced phishing websites, prior research proposed methodologies categorizing and mitigating cloaking techniques in phishing~\cite{oest2018inside, oest2019phishfarm, zhang2021crawlphish}.
+However, the server-side cloaking techniques can still defeat the anti-phishing ecosystem's key defense---blacklist-based mechanisms~\cite{oest2019phishfarm}.
+In addition, the content-based anti-phishing systems are very unlikely to obtain real phishing content in a wild scale (and thus are not practical) because of countless filtering conditions used in cloaking techniques~\cite{oest2018inside, oest2020phishtime}.
+% With so many filtering conditions in the cloaking techniques, it is very difficult for the content-based anti-phishing systems to acquire real phishing content in a large scale~\cite{oest2018inside, oest2020phishtime}, because anti-phishing systems need to enumerate countless HTTP profiles to visit the phishing websites, in order not to bypass the cloaking techniques.
+% In this way, phishers can still be beneficial from the cloaking techniques.
 % This magnifies an issue that current anti-phishing systems cannot provide a reliable protection for users against phishing websites with cloaking techniques.
 
 
-We first perform an automated evaluation, to analyze the prevalence of fingerprinting cloaking techniques in phishing kits.
+In this work, we first perform an automated evaluation, to analyze the prevalence of fingerprinting-based cloaking techniques in phishing kits.
 % and the ability of current anti-phishing systems against phishing websites.  
 In total, we analyzed 2,933 phishing kits from \emph{phishunt.io}~\cite{phishunt} and Cisco, and discovered that 96.52\% (2,831) of them contain fingerprinting cloaking techniques, which shows that such evasion is very prevalent within our dataset.
 So, since we know to expect fingerprinting cloaking in phishing, how about we consider the problem from a different angle:
