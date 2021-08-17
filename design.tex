@@ -92,6 +92,7 @@ As discussed in~\Cref{ss:benignalg}, to minimize the potential impact on benign 
 \spartacus needs to query the reputation, domain age, and popular subdomains for each domain the user tries to visit.
 To further reduce the latency where \spartacus has to send requests to the reputation lookup database externally and waits for the response,
 we beforehand cache the information of top 1,000 domains in Alexa Top One Million List~\cite{AlexaTop1M} into \spartacus's backend.
+The record in the database is formed as (\emph{domain}) - (\emph{reputation}) - (\emph{age}) - (\emph{top reviewed sub-domains}).
 In this way, the information of top visited websites \spartacus needs can be acquired quickly.
 
 
@@ -140,8 +141,8 @@ The decision makers consist of Blacklist \& Trustworthy Filter and Database Quer
 We will elaborate them in order of the system flow.
 
 \noindent
-\textbf{Blacklist \& Trustworthy Filter.}
-With the contribution of the anti-phishing ecosystem, \spartacus can filter known phishing URLs that have already been blacklisted by commodity blacklists such as Google Safe Browsing and Microsoft SmartScreen.
+\textbf{Blacklist \& Trustworthiness Filter.}
+With the contribution of the anti-phishing ecosystem, we can filter known phishing URLs that have already been blacklisted by commodity blacklists such as Google Safe Browsing and Microsoft SmartScreen.
 % through the query to the Malicious URL BlackList Database.
 Any match in the blacklist database will result in a block access to the URL without further action.
 Additionally, as discussed in~\Cref{ss:benignalg}, to minimize the impact on benign domains, \spartacus does not mutate the profile if it decides that the URL is benign based on the domain information.
@@ -152,7 +153,7 @@ Additionally, as discussed in~\Cref{ss:benignalg}, to minimize the impact on ben
 
 \noindent
 \textbf{Database Query.}
-When the URL does not fall into either Blacklist or Whitelist filter, \spartacus will examine whether such URL has been visited once by either the user or other users by querying the Fingerprinting Database.
+When the URL does not fall into either Blacklist or Trustworthiness filter, \spartacus will examine whether such URL has been visited once by either the user or other users by querying the Fingerprinting Database.
 If a record is found in the Database, \spartacus will mutate the web request profile according to the record to make sure that such web request profile will return a benign web page content;
 otherwise, \spartacus will call a \emph{Bot Profile Mutator}, which selects one profile from Anti-phishing Bot Profile Database to submit the web request and lowers the impact to possible web page layout to the lowest.
 
@@ -166,11 +167,11 @@ Take User-Agent as an example.
 Generally, anti-phishing crawlers contain ``bot'', ``crawler'', or the name of the company such as ``Google'', ``Facebook'' in the User-Agent string.
 We name the words that can trigger the cloaking technique in phishing attacks as \emph{triggering words} (e.g., words shown in~\autoref{tab:topsenswords}).
 Scripts in the phishing server typically read the string from HTTP requests and filter visits that contain crawler-like patterns.
-Another instance is Referer, where the visit is from previously.
+Another instance is Referrer, where the visit is from previously.
 Typically the previous location for a potential victim is from phishing lures the attackers distributed earlier.
 Hence, phishers can block all visits who are not from the phishing lures.
 At last, the profile mutator can leverage proxy servers to camouflage user's HTTP request.
-For example, a proxy server established in \emph{Amazon AWS} is very useful because phishers have knowledge that some anti-phishing crawlers are built in AWS EC2.
+For example, a proxy server established in \emph{Amazon AWS} is very useful because phishers have knowledge that some anti-phishing crawlers are built in AWS EC2 (according to the finding from~\autoref{tab:topsenswords}).
 In this case, the mutator can show the IP where crawlers are often from to the phishing server to trigger the cloaking techniques.
 
 To take advantage of phisher's filtering algorithm, the Bot Profile Mutator modifies the identifiable items in the HTTP profile such as User-Agent and Referer before the browser sends out the request.
