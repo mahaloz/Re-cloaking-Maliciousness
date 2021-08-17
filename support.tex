@@ -3,7 +3,7 @@
 Note that there are 17.72\% URLs that \spartacus cannot evade,
 as we show in~\autoref{s:eval}.
 We hypothesize that these phishing websites are ones that do not reply on User-Agent or Referrer cloaking techniques.
-The anti-phishing systems nowadays such as Google Safe Browsing and VirusTotal can timely detect and/or blacklist traditional phishing attacks.
+The anti-phishing systems nowadays such as Google Safe Browsing and VirusTotal can timely detect and/or blacklist such phishing attacks.
 Therefore, they can handle the phishing websites that cannot be evaded by \spartacus.
 And hence, \spartacus with the support of the anti-phishing ecosystem can prevent all types of phishing.
 
@@ -13,7 +13,7 @@ Due to the deployment of this experiment, we did not submit all phishing URLs.
 Among 4,674 submitted phishing URLs that are not evaded by \spartacus, anti-phishing systems such as Google Safe Browsing and VirusTotal can blacklist 4,598 of them.
 % The median detection speed is 28 minutes.
 The rest 76, after our manual inspection, is found that they are falsely reported to APWG.
-The evaluation result verifies that the ecosystem currently can protect users from being trapped in basic phishing attacks.
+The evaluation result verifies that the ecosystem currently can protect users from being trapped in phishing websites that \spartacus cannot evade, which is a complement of \spartacus.
 In contrast, we totally submitted 40,852 URLs that can be evaded by \spartacus.
 The result shows that 24,154 of them are not detected or blacklisted by the anti-phishing systems.
 % For URLs that can be detected, the median speed is 154 minutes, compared with that of 22 minutes for basic phishing websites.
@@ -43,7 +43,8 @@ The median detection time is 154 minutes, but it can take as long as 47.82 hours
 It reflects the ability of the anti-phishing ecosystem against phishing websites: 
 for basic phishing websites, they can react and blacklist them timely;
 for advanced phishing, it takes a long time to detect, which can be exploited by phishers to lure victims.
-Therefore, \spartacus not only can protect users from advanced phishing websites during the golden hour~\cite{oest2020sunrise} left by the current anti-phishing ecosystem due to process time, but also can evade phishing content even if the ecosystem cannot detect.
+For \spartacus, it only needs an average of 3.2 seconds (based on~\autoref{tab:exthouse}) to evade advanced phishing websites.
+Therefore, \spartacus not only can greatly shorten the golden hour~\cite{oest2020sunrise} left by the current anti-phishing ecosystem due to process time, but also can evade phishing content even if the ecosystem cannot detect.
 
 
 \begin{figure}
